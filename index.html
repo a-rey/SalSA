@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SalSA</title>
+    <link rel="icon" type="image/png" href="images/salsa.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+  </head>
+  <body>
+    <section class="hero is-primary is-medium">
+      <div class="hero-head">
+        <nav class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item">
+                <img src="images/salsa.png" alt="Logo">
+              </a>
+            </div>
+            <div id="navbarMenuHeroA" class="navbar-menu">
+              <div class="navbar-end">
+                <a class="navbar-item">
+                  Analyze
+                </a>
+                <a class="navbar-item">
+                  About
+                </a>
+                <a class="navbar-item">
+                  Examples
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            SalSA
+          </h1>
+          <h2 class="subtitle">
+            Static Malware Analysis for PE files (<span class="is-family-monospace">.exe</span>, <span class="is-family-monospace">.dll</span>, and <span class="is-family-monospace">.sys</span>)
+          </h2>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <h1 class="title has-text-centered has-text-weight-semibold">
+          Add your file here:
+        </h1>
+        <div class="file is-centered is-boxed">
+          <label class="file-label">
+            <div class="control">
+              <input id="pe-uploader" class="file-input" type="file">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose a file...
+                </span>
+              </span>
+            </div>
+          </label>
+        </div>
+      </div>
+    </section>
+    <hr>
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column has-text-centered">
+            <span class="icon is-large">
+              <i class="fas fa-child fa-3x"></i>
+            </span>
+            <p class="title">Standalone</p>
+            <p class="subtitle">All parsing is done <strong>locally</strong> in your browser (nothing is sent to a server)</p>
+          </div>
+          <div class="column has-text-centered">
+            <span class="icon is-large has-text-info">
+              <i class="fas fa-code fa-3x"></i>
+            </span>
+            <p class="title">Free</p>
+            <p class="subtitle">Completely open source on <a href="https://github.com/a-rey/SalSA">Github</a></p>
+          </div>
+          <div class="column has-text-centered">
+            <span class="icon is-large has-text-danger">
+              <i class="fas fa-bug fa-3x"></i>
+            </span>
+            <p class="title">Modern</p>
+            <p class="subtitle">Applies <a href="">rules</a> to check for the <strong>latest</strong> Malware behaviors</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <hr>
+    <section class="section">
+      <div class="container">
+        <p class="title">Examples</p>
+        <p class="subtitle">TODO: need a simple video of usage</p>
+      </div>
+    </section>
+    <script defer="" type="text/javascript" src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
+    <script defer="" type="text/javascript" src="js/pe.js"></script>
+    <script defer="" type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>
