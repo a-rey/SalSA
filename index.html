@@ -4,18 +4,24 @@
     <title>SalSA</title>
     <link rel="icon" type="image/png" href="images/salsa.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <section class="hero is-primary is-medium">
+    <section class="hero is-dark is-medium">
       <div class="hero-head">
-        <nav class="navbar">
+        <nav class="navbar is-dark">
           <div class="container">
             <div class="navbar-brand">
-              <a class="navbar-item">
-                <img src="images/salsa.png" alt="Logo">
+              <a class="navbar-item" href="">
+                <img src="images/salsa.png">
+              </a>
+              <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="mainNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
               </a>
             </div>
-            <div id="navbarMenuHeroA" class="navbar-menu">
+            <div id="mainNav" class="navbar-menu">
               <div class="navbar-end">
                 <a class="navbar-item">
                   Analyze
@@ -32,8 +38,8 @@
         </nav>
       </div>
       <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
+        <div class="container is-dark">
+          <h1 class="title salsa-has-text-primary">
             SalSA
           </h1>
           <h2 class="subtitle">
@@ -64,12 +70,11 @@
         </div>
       </div>
     </section>
-    <hr>
     <section class="section">
       <div class="container">
         <div class="columns">
           <div class="column has-text-centered">
-            <span class="icon is-large">
+            <span class="icon is-large has-text-success">
               <i class="fas fa-child fa-3x"></i>
             </span>
             <p class="title">Standalone</p>
@@ -80,7 +85,7 @@
               <i class="fas fa-code fa-3x"></i>
             </span>
             <p class="title">Free</p>
-            <p class="subtitle">Completely open source on <a href="https://github.com/a-rey/SalSA">Github</a></p>
+            <p class="subtitle">Completely open source on <a target="_blank" href="https://github.com/a-rey/SalSA">Github</a></p>
           </div>
           <div class="column has-text-centered">
             <span class="icon is-large has-text-danger">
@@ -92,7 +97,6 @@
         </div>
       </div>
     </section>
-    <hr>
     <section class="section">
       <div class="container">
         <p class="title">Examples</p>
@@ -102,5 +106,117 @@
     <script defer="" type="text/javascript" src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
     <script defer="" type="text/javascript" src="js/pe.js"></script>
     <script defer="" type="text/javascript" src="js/main.js"></script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- TEMPLATES: -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- Report Navigation Bar: -->
+    <script id="report-navbar" type="text/template">
+      <nav class="navbar is-dark is-fixed-top">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="">
+            <img src="images/salsa.png">
+          </a>
+          <div class="navbar-burger burger" data-target="reportNav">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <div class="navbar-menu" id="reportNav">
+          <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">Report</a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item is-active">Overview</a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">DOS Header</a>
+                <a class="navbar-item">PE Header</a>
+                <a class="navbar-item">Image Header</a>
+                <a class="navbar-item">Data Directories</a>
+                <a class="navbar-item">Sections</a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">Alerts</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </script>
+    <!-- Report Overview Pane: -->
+    <script id="report-overview" type="text/template">
+      <section class="section">
+        <div class="container">
+          <h1 class="title">Information</h1>
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <tbody>
+              <tr>
+                <td>File Name</td>
+                <td>
+                  <span class="is-family-code">{{FILENAME}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>File Size</td>
+                <td>
+                  <span class="is-family-code">{{FILESIZE_READABLE}}</span>
+                  <span class="is-family-code">({{FILESIZE_ACTUAL}}</span> bytes)
+                </td>
+              </tr>
+              <tr>
+                <td>Compilation Timestamp</td>
+                <td>
+                  <span class="is-family-code">{{TIMESTAMP}}</span>
+                </td>
+              </tr>
+              <tr>
+                <td>Target Machine Type</td>
+                <td>
+                  <span class="is-family-code">{{MACHINE_TYPE}}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr>
+        <div class="container">
+          <h1 class="title">Hashes</h1>
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SHA-1</td>
+                <td>
+                  <span class="is-family-code">{{SHA1}}</span>
+                  <a target="_blank" href="https://www.virustotal.com/gui/file/{{SHA1}}" class="button is-danger is-small">
+                    <span class="icon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                    <span>VirusTotal</span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>SHA-256</td>
+                <td>
+                  <span class="is-family-code">{{SHA256}}</span>
+                  <a target="_blank" href="https://www.virustotal.com/gui/file/{{SHA256}}" class="button is-danger is-small">
+                    <span class="icon">
+                      <i class="fas fa-search"></i>
+                    </span>
+                    <span>VirusTotal</span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   </body>
 </html>

@@ -4,10 +4,37 @@
 
 ((window, document) => {
   'use strict';
+  // global application container
   window.salsa = {};
+  // delay in milliseconds for progress bar updating
+  const _PROGRESS_DELAY_MS = 300;
+
+  // utility function for progress bar UI
+  const _delay = (ms) => {
+    return (val) => {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(val), ms);
+      });
+    };
+  };
+
+  // utility function to convert an ArrayBuffer to a hex string
+  const _raw2Hex = (a) => {
+    var hex = '';
+    const view = new DataView(a);
+    for (var i = 0; i < view.byteLength; i++) {
+      var c = view.getUint8(i).toString(16);
+      // zero pad one byte results
+      if (c.length < 2) {
+        c = '0' + c;
+      }
+      hex += c;
+    }
+    return hex;
+  };
 
   // creates the main progress bar for the application's status
-  salsa.initProgressBar = (msg) => {
+  salsa.initProgressBar = () => {
     // make progress bar
     var progressBar = document.createElement('progress');
     var progressBarContainer = document.createElement('div');
@@ -34,12 +61,10 @@
     progressBarHeader.classList.add('title');
     progressBarHeader.classList.add('has-text-weight-semibold');
     // set HTML attributes
-    progressBar.setAttribute('value', '0');
     progressBar.setAttribute('max', '100');
-    progressBarHeader.innerHTML = msg;
     // append modal to the DOM
     document.body.appendChild(modalContainer);
-    // maintain references to progress bar
+    // maintain important references to progress bar
     salsa._progressBar = progressBar;
     salsa._progressBarContainer = modalContainer;
     salsa._progressBarHeader = progressBarHeader;
@@ -56,25 +81,207 @@
     salsa._progressBarContainer.remove();
   };
 
-  salsa.parseFile = (e) => {
-    salsa._file = e.target.files[0];
-    // display the progress bar
-    salsa.initProgressBar(`parsing ${salsa._file.name} ...`);
-    // parse the file
-    PE.parse(salsa._file).then((d) => {
-      salsa._pedata = d;
-      salsa.updateProgressBar('33', `applying rules to ${salsa._file.name} ...`);
-      // TODO: apply rules
-      // salsa.updateProgressBar(66, `generating report for ${salsa._file.name} ...`);
-      // TODO: render new HTML
-      // salsa.updateProgressBar(100, 'Done!');
-      // salsa.removeProgressBar();
+  // hides all default HTML and "empties" the <body>
+  salsa.hideDefaultContent = () => {
+    salsa._defaultContent = [];
+    // get all <section> tags that are a child of <body> and hide them
+    document.querySelectorAll('body > section').forEach((ele) => {
+      // save references in order for later viewing
+      salsa._defaultContent.push(ele);
+      ele.style.display = 'none';
     });
   };
 
+  // shows all default HTML on a page refresh
+  salsa.showDefaultContent = () => {
+    // get all <section> tags that are a child of <body> and hide them
+    salsa._defaultContent.forEach((e) => {
+      e.style.display = 'block';
+    });
+  };
+
+  // generates HTML for a report's navigation bar
+  salsa.generateReportNavBar = () => {
+    // load template from DOM
+    var template = document.getElementById('report-navbar');
+    // get the contents of the template
+    var templateHtml = template.innerHTML;
+    // TODO: add templating for alerts to show how many per section
+    // render HTML
+    salsa._reportNavBar = document.createElement('div');
+    salsa._reportNavBar.innerHTML = templateHtml;
+    document.body.classList.add('has-navbar-fixed-top');
+    document.body.appendChild(salsa._reportNavBar);
+  };
+
+  // generates display for overview pane of a report
+  salsa.generateReportOverview = () => {
+    // use Web Cryptography API to generate hashes of the file
+    PE.read(salsa._file, 0, salsa._file.size).then((rawData) => {
+      const data = new Uint8Array(rawData);
+      const sha1Promise = window.crypto.subtle.digest({'name':'SHA-1'}, data);
+      const sha256Promise = window.crypto.subtle.digest({'name':'SHA-256'}, data);
+      return Promise.all([sha1Promise, sha256Promise]).then(([sha1, sha256]) => {
+        salsa._sha1hash = _raw2Hex(sha1);
+        salsa._sha256hash = _raw2Hex(sha256);
+      });
+    }).then(() => {
+      // identify machine type
+      var machine_type = '';
+      switch (PE.uint(salsa._pedata['PE_HEADER']['Machine'])) {
+        case PE.IMAGE_FILE_MACHINE_UNKNOWN:
+          machine_type = 'Applicable to any machine type';
+          break;
+        case PE.IMAGE_FILE_MACHINE_AM33:
+          machine_type = 'Matsushita AM33';
+          break;
+        case PE.IMAGE_FILE_MACHINE_AMD64:
+          machine_type = 'Intel x64';
+          break;
+        case PE.IMAGE_FILE_MACHINE_ARM:
+          machine_type = 'ARM little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_ARM64:
+          machine_type = 'ARM64 little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_ARMNT:
+          machine_type = 'ARM Thumb-2 little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_EBC:
+          machine_type = 'EFI byte code';
+          break;
+        case PE.IMAGE_FILE_MACHINE_I386:
+          console.log('here');
+          machine_type = 'Intel x86';
+          break;
+        case PE.IMAGE_FILE_MACHINE_IA64:
+          machine_type = 'Intel Itanium processor family';
+          break;
+        case PE.IMAGE_FILE_MACHINE_M32R:
+          machine_type = 'Mitsubishi M32R little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_MIPS16:
+          machine_type = 'MIPS16';
+          break;
+        case PE.IMAGE_FILE_MACHINE_MIPSFPU:
+          machine_type = 'MIPS with FPU';
+          break;
+        case PE.IMAGE_FILE_MACHINE_MIPSFPU16:
+          machine_type = 'MIPS16 with FPU';
+          break;
+        case PE.IMAGE_FILE_MACHINE_POWERPC:
+          machine_type = 'Power PC little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_POWERPCF:
+          machine_type = 'Power PC with floating point support';
+          break;
+        case PE.IMAGE_FILE_MACHINE_R4000:
+          machine_type = 'MIPS little endian';
+          break;
+        case PE.IMAGE_FILE_MACHINE_RISCV32:
+          machine_type = 'RISC-V 32-bit address space';
+          break;
+        case PE.IMAGE_FILE_MACHINE_RISCV64:
+          machine_type = 'RISC-V 64-bit address space';
+          break;
+        case PE.IMAGE_FILE_MACHINE_RISCV128:
+          machine_type = 'RISC-V 128-bit address space';
+          break;
+        case PE.IMAGE_FILE_MACHINE_SH3:
+          machine_type = 'Hitachi SH3';
+          break;
+        case PE.IMAGE_FILE_MACHINE_SH3DSP:
+          machine_type = 'Hitachi SH3 DSP';
+          break;
+        case PE.IMAGE_FILE_MACHINE_SH4:
+          machine_type = 'Hitachi SH4';
+          break;
+        case PE.IMAGE_FILE_MACHINE_SH5:
+          machine_type = 'Hitachi SH5';
+          break;
+        case PE.IMAGE_FILE_MACHINE_THUMB:
+          machine_type = 'Thumb';
+          break;
+        case PE.IMAGE_FILE_MACHINE_WCEMIPSV:
+          machine_type = 'MIPS little endian WCE v2';
+          break;
+        default:
+          machine_type = 'Invalid Machine Type';
+      }
+      // get compilation time
+      const creation_time = new Date(1000 * PE.uint(salsa._pedata['PE_HEADER']['TimeDateStamp']));
+      // get human readable file size
+      var file_size = '';
+      if (salsa._file.size == 0) {
+        file_size = "0.00 B";
+      } else {
+        var e = Math.floor(Math.log(salsa._file.size) / Math.log(1024));
+        file_size = (salsa._file.size / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'B';
+      }
+      // load template from DOM
+      var template = document.getElementById('report-overview');
+      // format HTML
+      var html = '';
+      html += template.innerHTML.replace(/{{SHA1}}/g, salsa._sha1hash)
+                                .replace(/{{SHA256}}/g, salsa._sha256hash)
+                                .replace(/{{FILENAME}}/g, salsa._file.name)
+                                .replace(/{{FILESIZE_ACTUAL}}/g, salsa._file.size)
+                                .replace(/{{FILESIZE_READABLE}}/g, file_size)
+                                .replace(/{{MACHINE_TYPE}}/g, machine_type)
+                                .replace(/{{TIMESTAMP}}/g, creation_time);
+      // render HTML
+      salsa._reportOverviewSection = document.createElement('div');
+      salsa._reportOverviewSection.innerHTML = html;
+      document.body.appendChild(salsa._reportOverviewSection);
+    });
+  };
+
+  // finds all navigation bars on the DOM and adds the toggle listener for mobile views
+  salsa.initNavBars = () => {
+    document.querySelectorAll('.navbar-burger').forEach((ele) => {
+      ele.addEventListener('click', (event) => {
+        // get the target from the "data-target" attribute
+        const target = document.getElementById(ele.dataset.target);
+        // toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        ele.classList.toggle('is-active');
+        target.classList.toggle('is-active');
+      });
+    });
+  };
+
+  // main routine for parsing a user file
+  salsa.parseFile = (e) => {
+    // display the progress bar
+    salsa._file = e.target.files[0];
+    salsa.initProgressBar();
+    salsa.updateProgressBar('0', `parsing ${salsa._file.name} ...`);
+    PE.parse(salsa._file).then((d) => {
+      // save parsed data
+      salsa._pedata = d;
+    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
+      // apply rules
+      salsa.updateProgressBar('33', `applying rules to ${salsa._file.name} ...`);
+    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
+      // render HTML report
+      salsa.updateProgressBar('66', `generating report for ${salsa._file.name} ...`);
+      salsa.hideDefaultContent();
+      salsa.generateReportNavBar();
+      salsa.initNavBars();
+      salsa.generateReportOverview();
+    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
+      salsa.updateProgressBar('100', 'done!');
+    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
+      // cleanup and display results
+      salsa.removeProgressBar();
+    });
+  };
+
+  // setup main page default event listeners
   salsa.init = () => {
-    // setup main page event listeners
-    document.querySelector('#pe-uploader').addEventListener('change', salsa.parseFile, false);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('pe-uploader').addEventListener('change', salsa.parseFile, false);
+      salsa.initNavBars();
+    });
   };
 
   // start the application

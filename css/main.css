@@ -1,0 +1,13 @@
+/*
+ * Custom CSS for the application
+ */
+
+.salsa-has-background-primary {
+  background-color: rgb(232,75,26) !important;
+}
+
+.salsa-is-primary,
+.salsa-has-text-primary {
+  color: rgb(232,75,26) !important;
+}
+
