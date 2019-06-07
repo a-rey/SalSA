@@ -217,7 +217,13 @@
     <script id="report-pe-template" type="text/template">
       <section id="report-pe" class="section is-hidden">
         <div class="container">
-          <h1 class="title">Header</h1>
+          <h1 class="title">PE Header (Also Called COFF Header)
+            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#coff-file-header-object-and-image" class="button is-small is-link is-rounded">
+              <span class="icon is-small">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </h1>
           <table class="table is-striped is-hoverable is-fullwidth">
             <tbody>
               <tr>
@@ -225,7 +231,13 @@
                 <td><span class="is-family-code">{{Signature}}</span></td>
               </tr>
               <tr>
-                <td>Machine</td>
+                <td>Machine
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#machine-types" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
                 <td><span class="is-family-code">{{Machine}}</span></td>
               </tr>
               <tr>
@@ -249,7 +261,13 @@
                 <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
               </tr>
               <tr>
-                <td>Characteristics</td>
+                <td>Characteristics
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#characteristics" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
                 <td><span class="is-family-code">{{Characteristics}}</span></td>
               </tr>
             </tbody>
@@ -261,11 +279,23 @@
     <script id="report-image-template" type="text/template">
       <section id="report-image" class="section is-hidden">
         <div class="container">
-          <h1 class="title">Header</h1>
+          <h1 class="title">Image "Optional" Header
+            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-standard-fields-image-only" class="button is-small is-link is-rounded">
+              <span class="icon is-small">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </h1>
           <table class="table is-striped is-hoverable is-fullwidth">
             <tbody>
               <tr>
-                <td>Magic</td>
+                <td>Magic
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-image-only" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
                 <td><span class="is-family-code">{{Magic}}</span></td>
               </tr>
               <tr>
@@ -349,11 +379,23 @@
                 <td><span class="is-family-code">{{CheckSum}}</span></td>
               </tr>
               <tr>
-                <td>Subsystem</td>
+                <td>Subsystem
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#windows-subsystem" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
                 <td><span class="is-family-code">{{Subsystem}}</span></td>
               </tr>
               <tr>
-                <td>DllCharacteristics</td>
+                <td>DllCharacteristics
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#dll-characteristics" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
                 <td><span class="is-family-code">{{DllCharacteristics}}</span></td>
               </tr>
               <tr>
