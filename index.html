@@ -152,26 +152,26 @@
               <tr>
                 <td>File Name</td>
                 <td>
-                  <span class="is-family-code">{{FILENAME}}</span>
+                  <span class="is-family-monospace">{{FILENAME}}</span>
                 </td>
               </tr>
               <tr>
                 <td>File Size</td>
                 <td>
-                  <span class="is-family-code">{{FILESIZE_READABLE}}</span>
-                  <span class="is-family-code">({{FILESIZE_ACTUAL}}</span> bytes)
+                  <span class="is-family-monospace">{{FILESIZE_READABLE}}</span>
+                  <span class="is-family-monospace">({{FILESIZE_ACTUAL}}</span> bytes)
                 </td>
               </tr>
               <tr>
                 <td>Compilation Timestamp</td>
                 <td>
-                  <span class="is-family-code">{{TIMESTAMP}}</span>
+                  <span class="is-family-monospace">{{TIMESTAMP}}</span>
                 </td>
               </tr>
               <tr>
                 <td>Target Machine Type</td>
                 <td>
-                  <span class="is-family-code">{{MACHINE_TYPE}}</span>
+                  <span class="is-family-monospace">{{MACHINE_TYPE}}</span>
                 </td>
               </tr>
             </tbody>
@@ -191,7 +191,7 @@
               <tr>
                 <td>SHA-1</td>
                 <td>
-                  <span class="is-family-code">{{SHA1}}</span>
+                  <span class="is-family-monospace">{{SHA1}}</span>
                   <a target="_blank" href="https://www.virustotal.com/gui/file/{{SHA1}}" class="button is-danger is-small">
                     <span class="icon">
                       <i class="fas fa-search"></i>
@@ -203,7 +203,7 @@
               <tr>
                 <td>SHA-256</td>
                 <td>
-                  <span class="is-family-code">{{SHA256}}</span>
+                  <span class="is-family-monospace">{{SHA256}}</span>
                   <a target="_blank" href="https://www.virustotal.com/gui/file/{{SHA256}}" class="button is-danger is-small">
                     <span class="icon">
                       <i class="fas fa-search"></i>
@@ -331,7 +331,48 @@
               </span>
             </a>
           </h1>
-          <pre class="is-family-code">{{DOS_STUB}}</pre>
+          <pre style="white-space:pre-wrap;word-wrap:break-word" class="is-family-code">{{DOS_STUB}}</pre>
+        </div>
+        <hr>
+        <div class="container">
+          <h1 class="title">Reference: Standard DOS Stub Program from GCC Compiler:
+            <a target="_blank" href="https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#MS-DOS_header" class="button is-small is-link is-rounded">
+              <span class="icon is-small">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </h1>
+          <pre class="is-family-monospace">
+; Using NASM with Intel Syntax
+push cs        ; push CS onto the stack
+pop ds         ; set DS to CS
+
+; this means that Data Segment and Code Segment point to the same
+; 64k byte area of memory. without this we would not be able
+; to load any data.
+
+mov dx,message ; load address of message
+mov ah, 09     ; ah = 9 is the DOS interrupt print a string
+int 0x21
+mov ax,0x4c01  ; terminate the program
+int 0x21
+
+; 0Dh is the 'Carriage return' ASCII code
+; 0Ah is the 'Line feed' ASCII code
+; '$' is the string-terminator in DOS
+message db "This program cannot be run in DOS mode.", 0x0d, 0x0d, 0x0a, '$'</pre>
+        </div>
+        <hr>
+        <div class="container">
+          <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program:</h1>
+          <pre class="is-family-monospace">
+00000000  0E      push cs
+00000001  1F      pop ds
+00000002  BA0E00  mov dx,0xe
+00000005  B409    mov ah,0x9
+00000007  CD21    int 0x21
+00000009  B8014C  mov ax,0x4c01
+0000000C  CD21    int 0x21</pre>
         </div>
       </section>
     </script>

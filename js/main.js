@@ -18,21 +18,6 @@
     };
   };
 
-  // utility function to convert an ArrayBuffer to a hex string
-  const _raw2Hex = (a) => {
-    var hex = '';
-    const view = new DataView(a);
-    for (var i = 0; i < view.byteLength; i++) {
-      var c = view.getUint8(i).toString(16);
-      // zero pad one byte results
-      if (c.length < 2) {
-        c = '0' + c;
-      }
-      hex += c;
-    }
-    return hex;
-  };``
-
   // creates the main progress bar for the application's status
   salsa.initProgressBar = () => {
     // make progress bar
@@ -122,8 +107,8 @@
       const sha1Promise = window.crypto.subtle.digest({'name':'SHA-1'}, data);
       const sha256Promise = window.crypto.subtle.digest({'name':'SHA-256'}, data);
       return Promise.all([sha1Promise, sha256Promise]).then(([sha1, sha256]) => {
-        salsa._sha1hash = _raw2Hex(sha1);
-        salsa._sha256hash = _raw2Hex(sha256);
+        salsa._sha1hash = PE.hex(sha1);
+        salsa._sha256hash = PE.hex(sha256);
       });
     }).then(() => {
       // identify machine type
@@ -151,7 +136,7 @@
           machine_type = 'EFI byte code';
           break;
         case PE.IMAGE_FILE_MACHINE_I386:
-          machine_type = 'Intel x86';
+          machine_type = 'Intel x86 (386 and similar processors)';
           break;
         case PE.IMAGE_FILE_MACHINE_IA64:
           machine_type = 'Intel Itanium processor family';
@@ -238,12 +223,11 @@
   salsa.generateReportDOS = () => {
     // load template from DOM
     var template = document.getElementById('report-dos-template').innerHTML;
-    // format HTML
+    // format general HTML
     for (var k in salsa._pedata['DOS_HEADER']) {
-      template = template.replace(new RegExp(`{{${k}}}`, 'g'), '0x' + _raw2Hex(salsa._pedata['DOS_HEADER'][k]));
+      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['DOS_HEADER'][k]));
     }
-    // TODO: make a better view for this
-    template = template.replace(/{{DOS_STUB}}/g, '0x' + _raw2Hex(salsa._pedata['DOS_STUB']));
+    template = template.replace(/{{DOS_STUB}}/g, PE.hex(salsa._pedata['DOS_STUB']));
     // render HTML
     salsa._reportDOSSection = document.createElement('div');
     salsa._reportDOSSection.innerHTML = template;

@@ -408,21 +408,37 @@ var PE = (() => {
     _offset += _size(_headers['PE_HEADER']);
   }
 
-  // convert a little endian ArrayBuffer to a uint
+  // convert a little endian ArrayBuffer to an unsigned integer
   function uint(buffer) {
-    var value = 0;
-    var array = new Uint8Array(buffer);
-    for (var i = 0; i < array.length; i++) {
-      value += (array[i] << (8 * i));
+    var r = 0;
+    const a = new Uint8Array(buffer);
+    for (var i = 0; i < a.length; i++) {
+      r += (a[i] << (8 * i));
     }
-    return value;
+    return r;
   }
 
-  // convert an array of bytes to a string
-  function str(a) {
+  // convert a little endian ArrayBuffer of bytes to an ASCII string
+  function str(buffer) {
     var r = '';
+    const a = new Uint8Array(buffer);
     for (var i = 0; i < a.length; i++) {
       r += String.fromCharCode(a[i]);
+    }
+    return r;
+  }
+
+  // convert a little endian ArrayBuffer of bytes to a hex string
+  function hex(buffer) {
+    var r = '';
+    const a = new DataView(buffer);
+    for (var i = (a.byteLength - 1); i >= 0; i--) {
+      var c = a.getUint8(i).toString(16);
+      // zero pad one byte results
+      if (c.length < 2) {
+        c = '0' + c;
+      }
+      r += c;
     }
     return r;
   }
@@ -462,7 +478,8 @@ var PE = (() => {
     'parse': parse,
     'read': read,
     'uint': uint,
-    'str': str
+    'str': str,
+    'hex': hex,
   };
   // add static constants
   for (var k in _static) {
