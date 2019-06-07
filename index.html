@@ -110,7 +110,7 @@
     <!-- TEMPLATES: -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- Report Navigation Bar: -->
-    <script id="report-navbar" type="text/template">
+    <script id="report-navbar-template" type="text/template">
       <nav class="navbar is-dark is-fixed-top">
         <div class="navbar-brand">
           <a class="navbar-item" href="">
@@ -127,15 +127,15 @@
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">Report</a>
               <div class="navbar-dropdown">
-                <a class="navbar-item is-active">Overview</a>
+                <a data-target="report-overview" class="salsa-pane-link navbar-item is-active">Overview</a>
                 <hr class="navbar-divider">
-                <a class="navbar-item">DOS Header</a>
-                <a class="navbar-item">PE Header</a>
-                <a class="navbar-item">Image Header</a>
-                <a class="navbar-item">Data Directories</a>
-                <a class="navbar-item">Sections</a>
+                <a data-target="report-dos" class="salsa-pane-link navbar-item">DOS Header</a>
+                <a data-target="" class="salsa-pane-link navbar-item">PE Header</a>
+                <a data-target="" class="salsa-pane-link navbar-item">Image Header</a>
+                <a data-target="" class="salsa-pane-link navbar-item">Data Directories</a>
+                <a data-target="" class="salsa-pane-link navbar-item">Sections</a>
                 <hr class="navbar-divider">
-                <a class="navbar-item">Alerts</a>
+                <a data-target="" class="salsa-pane-link navbar-item">Alerts</a>
               </div>
             </div>
           </div>
@@ -143,8 +143,8 @@
       </nav>
     </script>
     <!-- Report Overview Pane: -->
-    <script id="report-overview" type="text/template">
-      <section class="section">
+    <script id="report-overview-template" type="text/template">
+      <section id="report-overview" class="section">
         <div class="container">
           <h1 class="title">Information</h1>
           <table class="table is-striped is-hoverable is-fullwidth">
@@ -214,6 +214,124 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+    </script>
+    <!-- Report DOS Header Pane: -->
+    <script id="report-dos-template" type="text/template">
+      <section id="report-dos" class="section is-hidden">
+        <div class="container">
+          <h1 class="title">Header</h1>
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <tbody>
+              <tr>
+                <td>e_magic</td>
+                <td><span class="is-family-code">{{e_magic}}</span></td>
+                <td>Magic number ('MZ' in ASCII)</td>
+              </tr>
+              <tr>
+                <td>e_cblp</td>
+                <td><span class="is-family-code">{{e_cblp}}</span></td>
+                <td>Bytes in last page of file</td>
+              </tr>
+              <tr>
+                <td>e_cp</td>
+                <td><span class="is-family-code">{{e_cp}}</span></td>
+                <td>Number of pages in file</td>
+              </tr>
+              <tr>
+                <td>e_crlc</td>
+                <td><span class="is-family-code">{{e_crlc}}</span></td>
+                <td>Relocation items</td>
+              </tr>
+              <tr>
+                <td>e_cparhdr</td>
+                <td><span class="is-family-code">{{e_cparhdr}}</span></td>
+                <td>Number of paragraphs in header</td>
+              </tr>
+              <tr>
+                <td>e_minalloc</td>
+                <td><span class="is-family-code">{{e_minalloc}}</span></td>
+                <td>Minimum extra paragraphs needed</td>
+              </tr>
+              <tr>
+                <td>e_maxalloc</td>
+                <td><span class="is-family-code">{{e_maxalloc}}</span></td>
+                <td>Maximum extra paragraphs needed</td>
+              </tr>
+              <tr>
+                <td>e_ss</td>
+                <td><span class="is-family-code">{{e_ss}}</span></td>
+                <td>Initial (relative) SS value</td>
+              </tr>
+              <tr>
+                <td>e_sp</td>
+                <td><span class="is-family-code">{{e_sp}}</span></td>
+                <td>Initial SP value</td>
+              </tr>
+              <tr>
+                <td>e_csum</td>
+                <td><span class="is-family-code">{{e_csum}}</span></td>
+                <td>Checksum</td>
+              </tr>
+              <tr>
+                <td>e_ip</td>
+                <td><span class="is-family-code">{{e_ip}}</span></td>
+                <td>Initial IP value</td>
+              </tr>
+              <tr>
+                <td>e_cs</td>
+                <td><span class="is-family-code">{{e_cs}}</span></td>
+                <td>Initial (relative) CS value</td>
+              </tr>
+              <tr>
+                <td>e_lfarlc</td>
+                <td><span class="is-family-code">{{e_lfarlc}}</span></td>
+                <td>File address of relocation table</td>
+              </tr>
+              <tr>
+                <td>e_ovno</td>
+                <td><span class="is-family-code">{{e_ovno}}</span></td>
+                <td>Overlay number</td>
+              </tr>
+              <tr>
+                <td>e_res</td>
+                <td><span class="is-family-code">{{e_res}}</span></td>
+                <td><strong>Reserved</strong></td>
+              </tr>
+              <tr>
+                <td>e_oemid</td>
+                <td><span class="is-family-code">{{e_oemid}}</span></td>
+                <td>OEM identifier (for <span class="is-family-code">e_oeminfo</span>)</td>
+              </tr>
+              <tr>
+                <td>e_oeminfo</td>
+                <td><span class="is-family-code">{{e_oeminfo}}</span></td>
+                <td>OEM information (<span class="is-family-code">e_oemid</span> specific)</td>
+              </tr>
+              <tr>
+                <td>e_res2</td>
+                <td><span class="is-family-code">{{e_res2}}</span></td>
+                <td><strong>Reserved</strong></td>
+              </tr>
+              <tr>
+                <td>e_lfanew</td>
+                <td><span class="is-family-code">{{e_lfanew}}</span></td>
+                <td>File address of the PE header</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr>
+        <div class="container">
+          <h1 class="title">DOS Stub Program
+            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#ms-dos-stub-image-only" class="button is-small is-link is-rounded">
+              <span class="icon is-small">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </h1>
+          <pre class="is-family-code">{{DOS_STUB}}</pre>
         </div>
       </section>
     </script>

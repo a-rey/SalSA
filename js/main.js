@@ -31,7 +31,7 @@
       hex += c;
     }
     return hex;
-  };
+  };``
 
   // creates the main progress bar for the application's status
   salsa.initProgressBar = () => {
@@ -103,7 +103,7 @@
   // generates HTML for a report's navigation bar
   salsa.generateReportNavBar = () => {
     // load template from DOM
-    var template = document.getElementById('report-navbar');
+    var template = document.getElementById('report-navbar-template');
     // get the contents of the template
     var templateHtml = template.innerHTML;
     // TODO: add templating for alerts to show how many per section
@@ -151,7 +151,6 @@
           machine_type = 'EFI byte code';
           break;
         case PE.IMAGE_FILE_MACHINE_I386:
-          console.log('here');
           machine_type = 'Intel x86';
           break;
         case PE.IMAGE_FILE_MACHINE_IA64:
@@ -219,20 +218,56 @@
         file_size = (salsa._file.size / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'B';
       }
       // load template from DOM
-      var template = document.getElementById('report-overview');
+      var template = document.getElementById('report-overview-template');
       // format HTML
-      var html = '';
-      html += template.innerHTML.replace(/{{SHA1}}/g, salsa._sha1hash)
-                                .replace(/{{SHA256}}/g, salsa._sha256hash)
-                                .replace(/{{FILENAME}}/g, salsa._file.name)
-                                .replace(/{{FILESIZE_ACTUAL}}/g, salsa._file.size)
-                                .replace(/{{FILESIZE_READABLE}}/g, file_size)
-                                .replace(/{{MACHINE_TYPE}}/g, machine_type)
-                                .replace(/{{TIMESTAMP}}/g, creation_time);
+      var html = template.innerHTML.replace(/{{SHA1}}/g, salsa._sha1hash)
+                                   .replace(/{{SHA256}}/g, salsa._sha256hash)
+                                   .replace(/{{FILENAME}}/g, salsa._file.name)
+                                   .replace(/{{FILESIZE_ACTUAL}}/g, salsa._file.size)
+                                   .replace(/{{FILESIZE_READABLE}}/g, file_size)
+                                   .replace(/{{MACHINE_TYPE}}/g, machine_type)
+                                   .replace(/{{TIMESTAMP}}/g, creation_time);
       // render HTML
       salsa._reportOverviewSection = document.createElement('div');
       salsa._reportOverviewSection.innerHTML = html;
       document.body.appendChild(salsa._reportOverviewSection);
+    });
+  };
+
+  // generates display for DOS header
+  salsa.generateReportDOS = () => {
+    // load template from DOM
+    var template = document.getElementById('report-dos-template').innerHTML;
+    // format HTML
+    for (var k in salsa._pedata['DOS_HEADER']) {
+      template = template.replace(new RegExp(`{{${k}}}`, 'g'), '0x' + _raw2Hex(salsa._pedata['DOS_HEADER'][k]));
+    }
+    // TODO: make a better view for this
+    template = template.replace(/{{DOS_STUB}}/g, '0x' + _raw2Hex(salsa._pedata['DOS_STUB']));
+    // render HTML
+    salsa._reportDOSSection = document.createElement('div');
+    salsa._reportDOSSection.innerHTML = template;
+    document.body.appendChild(salsa._reportDOSSection);
+  };
+
+  // applies pane toggle to all <a> tags with the pane class
+  salsa.initPanes = () => {
+    document.querySelectorAll('.salsa-pane-link').forEach((ele) => {
+      ele.addEventListener('click', (event) => {
+        // find active pane and hide it
+        document.querySelectorAll('.salsa-pane-link').forEach((e) => {
+          if (e.classList.contains('is-active')) {
+            const active = document.getElementById(e.dataset.target);
+            active.classList.add('is-hidden');
+            e.classList.toggle('is-active');
+          }
+        });
+        // get the target pane ID from the "data-target" attribute
+        const target = document.getElementById(ele.dataset.target);
+        // toggle the "is-active" class
+        ele.classList.toggle('is-active');
+        target.classList.toggle('is-hidden');
+      });
     });
   };
 
@@ -268,6 +303,9 @@
       salsa.generateReportNavBar();
       salsa.initNavBars();
       salsa.generateReportOverview();
+      salsa.generateReportDOS();
+
+      salsa.initPanes();
     }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
       salsa.updateProgressBar('100', 'done!');
     }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
