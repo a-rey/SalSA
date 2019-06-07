@@ -130,12 +130,12 @@
                 <a data-target="report-overview" class="salsa-pane-link navbar-item is-active">Overview</a>
                 <hr class="navbar-divider">
                 <a data-target="report-dos" class="salsa-pane-link navbar-item">DOS Header</a>
-                <a data-target="" class="salsa-pane-link navbar-item">PE Header</a>
-                <a data-target="" class="salsa-pane-link navbar-item">Image Header</a>
-                <a data-target="" class="salsa-pane-link navbar-item">Data Directories</a>
-                <a data-target="" class="salsa-pane-link navbar-item">Sections</a>
+                <a data-target="report-pe" class="salsa-pane-link navbar-item">PE Header</a>
+                <a data-target="report-image" class="salsa-pane-link navbar-item">Image Header</a>
+                <a data-target="report-data-directories" class="salsa-pane-link navbar-item">Data Directories</a>
+                <a data-target="report-sections" class="salsa-pane-link navbar-item">Sections</a>
                 <hr class="navbar-divider">
-                <a data-target="" class="salsa-pane-link navbar-item">Alerts</a>
+                <a data-target="report-alerts" class="salsa-pane-link navbar-item">Alerts</a>
               </div>
             </div>
           </div>
@@ -151,9 +151,7 @@
             <tbody>
               <tr>
                 <td>File Name</td>
-                <td>
-                  <span class="is-family-monospace">{{FILENAME}}</span>
-                </td>
+                <td><span class="is-family-monospace">{{FILENAME}}</span></td>
               </tr>
               <tr>
                 <td>File Size</td>
@@ -170,9 +168,7 @@
               </tr>
               <tr>
                 <td>Target Machine Type</td>
-                <td>
-                  <span class="is-family-monospace">{{MACHINE_TYPE}}</span>
-                </td>
+                <td><span class="is-family-monospace">{{MACHINE_TYPE}}</span></td>
               </tr>
             </tbody>
           </table>
@@ -211,6 +207,178 @@
                     <span>VirusTotal</span>
                   </a>
                 </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </script>
+    <!-- Report PE Header Pane: -->
+    <script id="report-pe-template" type="text/template">
+      <section id="report-pe" class="section is-hidden">
+        <div class="container">
+          <h1 class="title">Header</h1>
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <tbody>
+              <tr>
+                <td>Signature</td>
+                <td><span class="is-family-code">{{Signature}}</span></td>
+              </tr>
+              <tr>
+                <td>Machine</td>
+                <td><span class="is-family-code">{{Machine}}</span></td>
+              </tr>
+              <tr>
+                <td>NumberOfSections</td>
+                <td><span class="is-family-code">{{NumberOfSections}}</span></td>
+              </tr>
+              <tr>
+                <td>TimeDateStamp</td>
+                <td><span class="is-family-code">{{TimeDateStamp}}</span></td>
+              </tr>
+              <tr>
+                <td>PointerToSymbolTable</td>
+                <td><span class="is-family-code">{{PointerToSymbolTable}}</span></td>
+              </tr>
+              <tr>
+                <td>NumberOfSymbols</td>
+                <td><span class="is-family-code">{{NumberOfSymbols}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfOptionalHeader</td>
+                <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
+              </tr>
+              <tr>
+                <td>Characteristics</td>
+                <td><span class="is-family-code">{{Characteristics}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </script>
+    <!-- Report IMAGE Header Pane: -->
+    <script id="report-image-template" type="text/template">
+      <section id="report-image" class="section is-hidden">
+        <div class="container">
+          <h1 class="title">Header</h1>
+          <table class="table is-striped is-hoverable is-fullwidth">
+            <tbody>
+              <tr>
+                <td>Magic</td>
+                <td><span class="is-family-code">{{Magic}}</span></td>
+              </tr>
+              <tr>
+                <td>MajorLinkerVersion</td>
+                <td><span class="is-family-code">{{MajorLinkerVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MinorLinkerVersion</td>
+                <td><span class="is-family-code">{{MinorLinkerVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfCode</td>
+                <td><span class="is-family-code">{{SizeOfCode}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfInitializedData</td>
+                <td><span class="is-family-code">{{SizeOfInitializedData}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfUninitializedData</td>
+                <td><span class="is-family-code">{{SizeOfUninitializedData}}</span></td>
+              </tr>
+              <tr>
+                <td>AddressOfEntryPoint</td>
+                <td><span class="is-family-code">{{AddressOfEntryPoint}}</span></td>
+              </tr>
+              <tr>
+                <td>BaseOfCode</td>
+                <td><span class="is-family-code">{{BaseOfCode}}</span></td>
+              </tr>
+              <tr>
+                <td>ImageBase</td>
+                <td><span class="is-family-code">{{ImageBase}}</span></td>
+              </tr>
+              <tr>
+                <td>SectionAlignment</td>
+                <td><span class="is-family-code">{{SectionAlignment}}</span></td>
+              </tr>
+              <tr>
+                <td>FileAlignment</td>
+                <td><span class="is-family-code">{{FileAlignment}}</span></td>
+              </tr>
+              <tr>
+                <td>MajorOperatingSystemVersion</td>
+                <td><span class="is-family-code">{{MajorOperatingSystemVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MinorOperatingSystemVersion</td>
+                <td><span class="is-family-code">{{MinorOperatingSystemVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MajorImageVersion</td>
+                <td><span class="is-family-code">{{MajorImageVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MinorImageVersion</td>
+                <td><span class="is-family-code">{{MinorImageVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MajorSubsystemVersion</td>
+                <td><span class="is-family-code">{{MajorSubsystemVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>MinorSubsystemVersion</td>
+                <td><span class="is-family-code">{{MinorSubsystemVersion}}</span></td>
+              </tr>
+              <tr>
+                <td>Win32VersionValue</td>
+                <td><span class="is-family-code">{{Win32VersionValue}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfImage</td>
+                <td><span class="is-family-code">{{SizeOfImage}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfHeaders</td>
+                <td><span class="is-family-code">{{SizeOfHeaders}}</span></td>
+              </tr>
+              <tr>
+                <td>CheckSum</td>
+                <td><span class="is-family-code">{{CheckSum}}</span></td>
+              </tr>
+              <tr>
+                <td>Subsystem</td>
+                <td><span class="is-family-code">{{Subsystem}}</span></td>
+              </tr>
+              <tr>
+                <td>DllCharacteristics</td>
+                <td><span class="is-family-code">{{DllCharacteristics}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfStackReserve</td>
+                <td><span class="is-family-code">{{SizeOfStackReserve}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfStackCommit</td>
+                <td><span class="is-family-code">{{SizeOfStackCommit}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfHeapReserve</td>
+                <td><span class="is-family-code">{{SizeOfHeapReserve}}</span></td>
+              </tr>
+              <tr>
+                <td>SizeOfHeapCommit</td>
+                <td><span class="is-family-code">{{SizeOfHeapCommit}}</span></td>
+              </tr>
+              <tr>
+                <td>LoaderFlags</td>
+                <td><span class="is-family-code">{{LoaderFlags}}</span></td>
+              </tr>
+              <tr>
+                <td>NumberOfRvaAndSizes</td>
+                <td><span class="is-family-code">{{NumberOfRvaAndSizes}}</span></td>
               </tr>
             </tbody>
           </table>

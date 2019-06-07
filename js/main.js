@@ -234,6 +234,34 @@
     document.body.appendChild(salsa._reportDOSSection);
   };
 
+  // generate report for PE header
+  salsa.generateReportPE = () => {
+    // load template from DOM
+    var template = document.getElementById('report-pe-template').innerHTML;
+    // format general HTML
+    for (var k in salsa._pedata['PE_HEADER']) {
+      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['PE_HEADER'][k]));
+    }
+    // render HTML
+    salsa._reportPESection = document.createElement('div');
+    salsa._reportPESection.innerHTML = template;
+    document.body.appendChild(salsa._reportPESection);
+  };
+
+  // generate report for IMAGE header
+  salsa.generateReportIMAGE = () => {
+    // load template from DOM
+    var template = document.getElementById('report-image-template').innerHTML;
+    // format general HTML
+    for (var k in salsa._pedata['IMAGE_HEADER']) {
+      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['IMAGE_HEADER'][k]));
+    }
+    // render HTML
+    salsa._reportIMAGESection = document.createElement('div');
+    salsa._reportIMAGESection.innerHTML = template;
+    document.body.appendChild(salsa._reportIMAGESection);
+  };
+
   // applies pane toggle to all <a> tags with the pane class
   salsa.initPanes = () => {
     document.querySelectorAll('.salsa-pane-link').forEach((ele) => {
@@ -288,6 +316,8 @@
       salsa.initNavBars();
       salsa.generateReportOverview();
       salsa.generateReportDOS();
+      salsa.generateReportPE();
+      salsa.generateReportIMAGE();
 
       salsa.initPanes();
     }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
