@@ -521,7 +521,7 @@
     <template id="template-pe-report-coff">
       <section id="pe-report-coff" class="section is-hidden">
         <div class="container">
-          <h1 class="title">PE Header (Also Called COFF Header)
+          <h1 class="title">PE/COFF Header
             <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#coff-file-header-object-and-image" class="button is-small is-link is-rounded">
               <span class="icon is-small">
                 <i class="fas fa-question"></i>
@@ -533,6 +533,7 @@
               <tr>
                 <td>Signature</td>
                 <td><span class="is-family-code">{{Signature}}</span></td>
+                <td>Header signature ('PE' in ASCII)</td>
               </tr>
               <tr>
                 <td>Machine
@@ -543,26 +544,32 @@
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Machine}}</span></td>
+                <td>The number that identifies the type of target machine: <span class="is-family-code">{{MACHINE_TYPE}}</span></td>
               </tr>
               <tr>
                 <td>NumberOfSections</td>
                 <td><span class="is-family-code">{{NumberOfSections}}</span></td>
+                <td>The number of sections in the section table, which immediately follows the image header</td>
               </tr>
               <tr>
                 <td>TimeDateStamp</td>
                 <td><span class="is-family-code">{{TimeDateStamp}}</span></td>
+                <td>When the file was created: <span class="is-family-code">{{TIMESTAMP}}</span></td>
               </tr>
               <tr>
                 <td>PointerToSymbolTable</td>
                 <td><span class="is-family-code">{{PointerToSymbolTable}}</span></td>
+                <td><strong>This value should be zero</strong> for an image because COFF debugging information is deprecated</td>
               </tr>
               <tr>
                 <td>NumberOfSymbols</td>
                 <td><span class="is-family-code">{{NumberOfSymbols}}</span></td>
+                <td><strong>This value should be zero</strong> for an image because COFF debugging information is deprecated</td>
               </tr>
               <tr>
                 <td>SizeOfOptionalHeader</td>
                 <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
+                <td>The size of the image header, which is required for executable files</td>
               </tr>
               <tr>
                 <td>Characteristics
@@ -573,9 +580,15 @@
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Characteristics}}</span></td>
+                <td>The flags that indicate the attributes of the file</td>
               </tr>
             </tbody>
           </table>
+        </div>
+        <hr>
+        <div class="container">
+          <h1 class="title">Characteristic Attribute Flags</h1>
+          {{CHARACTERISTICS}}
         </div>
       </section>
     </template>
