@@ -83,4 +83,33 @@ salsa.utils = {
     return r;
   },
 
+  hexdump: (buffer) => {
+    var r = '';
+    const a = new Uint8Array(buffer);
+    // parse hex dump in groups of 16
+    for (var blk_idx = 0; blk_idx < a.length; blk_idx += 16) {
+      // get block from raw data
+      var blk = a.slice(blk_idx, Math.min(blk_idx + 16, a.length));
+      // write line offset to monitor buffer
+      r += (('00000000' + blk_idx.toString(16)).slice(-8) + ' ');
+      // create hex display
+      var hex = '';
+      for (var i = 0; i < blk.length; i++) {
+        hex += (' ' + ((0xF0 & blk[i]) >> 4).toString(16).toUpperCase() + (0x0F & blk[i]).toString(16).toUpperCase());
+      }
+      hex += '   '.repeat(16 - blk.length);
+      // add hex to buffer
+      r += (hex + '  ');
+      // create ASCII text display
+      var chars = '';
+      for (var i = 0; i < blk.length; i++) {
+        chars += String.fromCharCode(blk[i]);
+      }
+      // replace non-ASCII with a '.'
+      r += chars.replace(/[\x00-\x1F\x7F-\xFF\x20]/g, '.');
+      r += '\n';
+    }
+    return r;
+  },
+
 };

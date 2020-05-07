@@ -132,6 +132,38 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <!-- TEMPLATES - PE REPORT:                                                 -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <template id="template-pe-report-navbar">
+      <nav id="pe-report-navbar" role="navigation" aria-label="main navigation" class="navbar is-dark is-fixed-top">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="">
+            <img src="images/salsa.png">
+          </a>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="reportNav">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+        <div class="navbar-menu" id="reportNav">
+          <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">Report</a>
+              <div class="navbar-dropdown">
+                <a data-target="pe-report-overview" class="navbar-item is-active">Overview</a>
+                <hr class="navbar-divider">pane
+                <a data-target="pe-report-dos" class="navbar-item">DOS Header & Stub</a>
+                <a data-target="pe-report-coff" class="navbar-item">PE Header</a>
+                <a data-target="pe-report-image" class="navbar-item">Image Header</a>
+                <a class="navbar-item">Data Directories</a>
+                <a class="navbar-item">Sections</a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">Alerts</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </template>
     <template id="template-pe-report-overview">
       <section id="pe-report-overview" class="section">
         <div class="container">
@@ -202,42 +234,10 @@
         </div>
       </section>
     </template>
-    <template id="template-pe-report-navbar">
-      <nav id="pe-report-navbar" role="navigation" aria-label="main navigation" class="navbar is-dark is-fixed-top">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="">
-            <img src="images/salsa.png">
-          </a>
-          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="reportNav">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
-        <div class="navbar-menu" id="reportNav">
-          <div class="navbar-start">
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">Report</a>
-              <div class="navbar-dropdown">
-                <a data-target="pe-report-overview" class="navbar-item is-active">Overview</a>
-                <hr class="navbar-divider">pane
-                <a data-target="pe-report-dos" class="navbar-item">DOS Header</a>
-                <a data-target="pe-report-coff" class="navbar-item">PE Header</a>
-                <a data-target="pe-report-image" class="navbar-item">Image Header</a>
-                <a class="navbar-item">Data Directories</a>
-                <a class="navbar-item">Sections</a>
-                <hr class="navbar-divider">
-                <a class="navbar-item">Alerts</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </template>
     <template id="template-pe-report-dos">
         <section id="pe-report-dos" class="section is-hidden">
           <div class="container">
-            <h1 class="title">Header</h1>
+            <h1 class="title">DOS Header</h1>
             <table class="table is-striped is-hoverable is-fullwidth">
               <tbody>
                 <tr>
@@ -333,14 +333,14 @@
                 <tr>
                   <td>e_lfanew</td>
                   <td><span class="is-family-code">{{e_lfanew}}</span></td>
-                  <td>File address of the PE header</td>
+                  <td>File offset of the PE/COFF header</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <hr>
           <div class="container">
-            <h1 class="title">DOS Stub Program
+            <h1 class="title">DOS Stub Program Hex Dump
               <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#ms-dos-stub-image-only" class="button is-small is-link is-rounded">
                 <span class="icon is-small">
                   <i class="fas fa-question"></i>
@@ -358,37 +358,12 @@
                 </span>
               </a>
             </h1>
-            <pre class="is-family-monospace">
-        ; Using NASM with Intel Syntax
-        push cs        ; push CS onto the stack
-        pop ds         ; set DS to CS
-
-        ; this means that Data Segment and Code Segment point to the same
-        ; 64k byte area of memory. without this we would not be able
-        ; to load any data.
-
-        mov dx,message ; load address of message
-        mov ah, 09     ; ah = 9 is the DOS interrupt print a string
-        int 0x21
-        mov ax,0x4c01  ; terminate the program
-        int 0x21
-
-        ; 0Dh is the 'Carriage return' ASCII code
-        ; 0Ah is the 'Line feed' ASCII code
-        ; '$' is the string-terminator in DOS
-        message db "This program cannot be run in DOS mode.", 0x0d, 0x0d, 0x0a, '$'</pre>
+            <pre class="is-family-monospace">{{REF_STUB_1}}</pre>
           </div>
           <hr>
           <div class="container">
             <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program:</h1>
-            <pre class="is-family-monospace">
-        00000000  0E      push cs
-        00000001  1F      pop ds
-        00000002  BA0E00  mov dx,0xe
-        00000005  B409    mov ah,0x9
-        00000007  CD21    int 0x21
-        00000009  B8014C  mov ax,0x4c01
-        0000000C  CD21    int 0x21</pre>
+            <pre class="is-family-monospace">{{REF_STUB_2}}</pre>
           </div>
         </section>
     </template>
