@@ -6,17 +6,13 @@
   'use strict';
   // global application container
   window.salsa = {};
-  // delay in milliseconds for progress bar updating
-  const _PROGRESS_DELAY_MS = 300;
-
-  // utility function for progress bar UI
-  const _delay = (ms) => {
-    return (val) => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(val), ms);
-      });
-    };
+  // define empty template arrays
+  salsa.templates = {
+    'PE': [],
+    'ELF': [],
   };
+  // delay in milliseconds for progress bar text updating
+  const _PROGRESS_DELAY_MS = 300;
 
   // creates the main progress bar for the application's status
   salsa.initProgressBar = () => {
@@ -56,235 +52,39 @@
   };
 
   // updates the progress bar with value and status message
-  salsa.updateProgressBar = (value, msg) => {
+  salsa.updateProgressBar = async (value, msg) => {
     salsa._progressBar.setAttribute('value', value);
     salsa._progressBarHeader.innerHTML = msg;
+    await salsa.utils.delay(_PROGRESS_DELAY_MS);
   };
 
   // removes the progress bar from the DOM
-  salsa.removeProgressBar = () => {
+  salsa.removeProgressBar = async () => {
+    await salsa.utils.delay(_PROGRESS_DELAY_MS);
     salsa._progressBarContainer.remove();
   };
 
-  // hides all default HTML and "empties" the <body>
-  salsa.hideDefaultContent = () => {
+  // removes all default HTML and "empties" the <body>
+  salsa.removeDefaultContent = () => {
     salsa._defaultContent = [];
     // get all <section> tags that are a child of <body> and hide them
     document.querySelectorAll('body > section').forEach((ele) => {
       // save references in order for later viewing
       salsa._defaultContent.push(ele);
-      ele.style.display = 'none';
+      ele.parentNode.removeChild(ele);
     });
   };
 
-  // shows all default HTML on a page refresh
-  salsa.showDefaultContent = () => {
-    // get all <section> tags that are a child of <body> and hide them
+  // adds all default HTML on a page refresh
+  salsa.addDefaultContent = () => {
+    // get all <section> tags that are a child of <body> and show them
     salsa._defaultContent.forEach((e) => {
-      e.style.display = 'block';
-    });
-  };
-
-  // generates HTML for a report's navigation bar
-  salsa.generateReportNavBar = () => {
-    // load template from DOM
-    var template = document.getElementById('report-navbar-template');
-    // get the contents of the template
-    var templateHtml = template.innerHTML;
-    // TODO: add templating for alerts to show how many per section
-    // render HTML
-    salsa._reportNavBar = document.createElement('div');
-    salsa._reportNavBar.innerHTML = templateHtml;
-    document.body.classList.add('has-navbar-fixed-top');
-    document.body.appendChild(salsa._reportNavBar);
-  };
-
-  // generates display for overview pane of a report
-  salsa.generateReportOverview = () => {
-    // use Web Cryptography API to generate hashes of the file
-    PE.read(salsa._file, 0, salsa._file.size).then((rawData) => {
-      const data = new Uint8Array(rawData);
-      const sha1Promise = window.crypto.subtle.digest({'name':'SHA-1'}, data);
-      const sha256Promise = window.crypto.subtle.digest({'name':'SHA-256'}, data);
-      return Promise.all([sha1Promise, sha256Promise]).then(([sha1, sha256]) => {
-        salsa._sha1hash = PE.hex(sha1);
-        salsa._sha256hash = PE.hex(sha256);
-      });
-    }).then(() => {
-      // identify machine type
-      var machine_type = '';
-      switch (PE.uint(salsa._pedata['PE_HEADER']['Machine'])) {
-        case PE.IMAGE_FILE_MACHINE_UNKNOWN:
-          machine_type = 'Applicable to any machine type';
-          break;
-        case PE.IMAGE_FILE_MACHINE_AM33:
-          machine_type = 'Matsushita AM33';
-          break;
-        case PE.IMAGE_FILE_MACHINE_AMD64:
-          machine_type = 'Intel x64';
-          break;
-        case PE.IMAGE_FILE_MACHINE_ARM:
-          machine_type = 'ARM little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_ARM64:
-          machine_type = 'ARM64 little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_ARMNT:
-          machine_type = 'ARM Thumb-2 little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_EBC:
-          machine_type = 'EFI byte code';
-          break;
-        case PE.IMAGE_FILE_MACHINE_I386:
-          machine_type = 'Intel x86 (386 and similar processors)';
-          break;
-        case PE.IMAGE_FILE_MACHINE_IA64:
-          machine_type = 'Intel Itanium processor family';
-          break;
-        case PE.IMAGE_FILE_MACHINE_M32R:
-          machine_type = 'Mitsubishi M32R little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_MIPS16:
-          machine_type = 'MIPS16';
-          break;
-        case PE.IMAGE_FILE_MACHINE_MIPSFPU:
-          machine_type = 'MIPS with FPU';
-          break;
-        case PE.IMAGE_FILE_MACHINE_MIPSFPU16:
-          machine_type = 'MIPS16 with FPU';
-          break;
-        case PE.IMAGE_FILE_MACHINE_POWERPC:
-          machine_type = 'Power PC little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_POWERPCF:
-          machine_type = 'Power PC with floating point support';
-          break;
-        case PE.IMAGE_FILE_MACHINE_R4000:
-          machine_type = 'MIPS little endian';
-          break;
-        case PE.IMAGE_FILE_MACHINE_RISCV32:
-          machine_type = 'RISC-V 32-bit address space';
-          break;
-        case PE.IMAGE_FILE_MACHINE_RISCV64:
-          machine_type = 'RISC-V 64-bit address space';
-          break;
-        case PE.IMAGE_FILE_MACHINE_RISCV128:
-          machine_type = 'RISC-V 128-bit address space';
-          break;
-        case PE.IMAGE_FILE_MACHINE_SH3:
-          machine_type = 'Hitachi SH3';
-          break;
-        case PE.IMAGE_FILE_MACHINE_SH3DSP:
-          machine_type = 'Hitachi SH3 DSP';
-          break;
-        case PE.IMAGE_FILE_MACHINE_SH4:
-          machine_type = 'Hitachi SH4';
-          break;
-        case PE.IMAGE_FILE_MACHINE_SH5:
-          machine_type = 'Hitachi SH5';
-          break;
-        case PE.IMAGE_FILE_MACHINE_THUMB:
-          machine_type = 'Thumb';
-          break;
-        case PE.IMAGE_FILE_MACHINE_WCEMIPSV:
-          machine_type = 'MIPS little endian WCE v2';
-          break;
-        default:
-          machine_type = 'Invalid Machine Type';
-      }
-      // get compilation time
-      const creation_time = new Date(1000 * PE.uint(salsa._pedata['PE_HEADER']['TimeDateStamp']));
-      // get human readable file size
-      var file_size = '';
-      if (salsa._file.size == 0) {
-        file_size = "0.00 B";
-      } else {
-        var e = Math.floor(Math.log(salsa._file.size) / Math.log(1024));
-        file_size = (salsa._file.size / Math.pow(1024, e)).toFixed(2) + ' ' + ' KMGTP'.charAt(e) + 'B';
-      }
-      // load template from DOM
-      var template = document.getElementById('report-overview-template');
-      // format HTML
-      var html = template.innerHTML.replace(/{{SHA1}}/g, salsa._sha1hash)
-                                   .replace(/{{SHA256}}/g, salsa._sha256hash)
-                                   .replace(/{{FILENAME}}/g, salsa._file.name)
-                                   .replace(/{{FILESIZE_ACTUAL}}/g, salsa._file.size)
-                                   .replace(/{{FILESIZE_READABLE}}/g, file_size)
-                                   .replace(/{{MACHINE_TYPE}}/g, machine_type)
-                                   .replace(/{{TIMESTAMP}}/g, creation_time);
-      // render HTML
-      salsa._reportOverviewSection = document.createElement('div');
-      salsa._reportOverviewSection.innerHTML = html;
-      document.body.appendChild(salsa._reportOverviewSection);
-    });
-  };
-
-  // generates display for DOS header
-  salsa.generateReportDOS = () => {
-    // load template from DOM
-    var template = document.getElementById('report-dos-template').innerHTML;
-    // format general HTML
-    for (var k in salsa._pedata['DOS_HEADER']) {
-      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['DOS_HEADER'][k]));
-    }
-    template = template.replace(/{{DOS_STUB}}/g, PE.hex(salsa._pedata['DOS_STUB']));
-    // render HTML
-    salsa._reportDOSSection = document.createElement('div');
-    salsa._reportDOSSection.innerHTML = template;
-    document.body.appendChild(salsa._reportDOSSection);
-  };
-
-  // generate report for PE header
-  salsa.generateReportPE = () => {
-    // load template from DOM
-    var template = document.getElementById('report-pe-template').innerHTML;
-    // format general HTML
-    for (var k in salsa._pedata['PE_HEADER']) {
-      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['PE_HEADER'][k]));
-    }
-    // render HTML
-    salsa._reportPESection = document.createElement('div');
-    salsa._reportPESection.innerHTML = template;
-    document.body.appendChild(salsa._reportPESection);
-  };
-
-  // generate report for IMAGE header
-  salsa.generateReportIMAGE = () => {
-    // load template from DOM
-    var template = document.getElementById('report-image-template').innerHTML;
-    // format general HTML
-    for (var k in salsa._pedata['IMAGE_HEADER']) {
-      template = template.replace(new RegExp(`{{${k}}}`, 'g'), PE.hex(salsa._pedata['IMAGE_HEADER'][k]));
-    }
-    // render HTML
-    salsa._reportIMAGESection = document.createElement('div');
-    salsa._reportIMAGESection.innerHTML = template;
-    document.body.appendChild(salsa._reportIMAGESection);
-  };
-
-  // applies pane toggle to all <a> tags with the pane class
-  salsa.initPanes = () => {
-    document.querySelectorAll('.salsa-pane-link').forEach((ele) => {
-      ele.addEventListener('click', (event) => {
-        // find active pane and hide it
-        document.querySelectorAll('.salsa-pane-link').forEach((e) => {
-          if (e.classList.contains('is-active')) {
-            const active = document.getElementById(e.dataset.target);
-            active.classList.add('is-hidden');
-            e.classList.toggle('is-active');
-          }
-        });
-        // get the target pane ID from the "data-target" attribute
-        const target = document.getElementById(ele.dataset.target);
-        // toggle the "is-active" class
-        ele.classList.toggle('is-active');
-        target.classList.toggle('is-hidden');
-      });
+      document.body.appendChild(e);
     });
   };
 
   // finds all navigation bars on the DOM and adds the toggle listener for mobile views
-  salsa.initNavBars = () => {
+  salsa.initDefaultNavBar = () => {
     document.querySelectorAll('.navbar-burger').forEach((ele) => {
       ele.addEventListener('click', (event) => {
         // get the target from the "data-target" attribute
@@ -296,43 +96,70 @@
     });
   };
 
-  // main routine for parsing a user file
-  salsa.parseFile = (e) => {
-    // display the progress bar
-    salsa._file = e.target.files[0];
-    salsa.initProgressBar();
-    salsa.updateProgressBar('0', `parsing ${salsa._file.name} ...`);
-    PE.parse(salsa._file).then((d) => {
-      // save parsed data
-      salsa._pedata = d;
-    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
-      // apply rules
-      salsa.updateProgressBar('33', `applying rules to ${salsa._file.name} ...`);
-    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
-      // render HTML report
-      salsa.updateProgressBar('66', `generating report for ${salsa._file.name} ...`);
-      salsa.hideDefaultContent();
-      salsa.generateReportNavBar();
-      salsa.initNavBars();
-      salsa.generateReportOverview();
-      salsa.generateReportDOS();
-      salsa.generateReportPE();
-      salsa.generateReportIMAGE();
+  // looks through magic file signatures to identify file type
+  salsa.getFileFormat = async () => {
+    // loop through known file signatures
+    for (var key in salsa.magic) {
+      if (salsa.magic.hasOwnProperty(key)) {
+        var signature = await salsa.utils.read(salsa.file, 0, salsa.magic[key].length);
+        signature = new Uint8Array(signature);
+        // check signature
+        var match = true;
+        for (var i = 0; i < salsa.magic[key].length; i++) {
+          if (salsa.magic[key][i] !== signature[i]) {
+            match = false;
+            break;
+          }
+        }
+        // for a match, load parser
+        if (match) {
+          return key
+        }
+      }
+    }
+    return 'UNKNOWN';
+  };
 
-      salsa.initPanes();
-    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
-      salsa.updateProgressBar('100', 'done!');
-    }).then(_delay(_PROGRESS_DELAY_MS)).then(() => {
-      // cleanup and display results
-      salsa.removeProgressBar();
-    });
+  // main routine for parsing a user file
+  salsa.parseFile = async (e) => {
+    // display the progress bar
+    salsa.file = e.target.files[0];
+    salsa.initProgressBar();
+    await salsa.updateProgressBar('0', `examining ${salsa.file.name} ...`);
+    // try to figure out file format
+    var fmt = await salsa.getFileFormat();
+    await salsa.updateProgressBar('10', `file format is ${fmt} ...`);
+    salsa.parser = null;
+    switch (fmt) {
+      case 'PE':
+        salsa.parser = PE;
+        break;
+      case 'ELF':
+        salsa.parser = ELF;
+        break;
+    }
+    // for each parsed file format, generate the report
+    if (salsa.parser) {
+      await salsa.updateProgressBar('20', `parsing ${salsa.file.name} ...`);
+      const data = await salsa.parser.parse(salsa.file);
+      await salsa.updateProgressBar('30', `generating report for ${salsa.file.name} ...`);
+      salsa.removeDefaultContent();
+      for (var i = 0; i < salsa.templates[fmt].length; i++) {
+        await salsa.templates[fmt][i].render(data);
+      }
+      // TODO: apply rules
+      await salsa.updateProgressBar('100', 'done!');
+    } else {
+      console.log('invalid')
+    }
+    await salsa.removeProgressBar();
   };
 
   // setup main page default event listeners
   salsa.init = () => {
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('pe-uploader').addEventListener('change', salsa.parseFile, false);
-      salsa.initNavBars();
+      document.getElementById('uploader').addEventListener('change', salsa.parseFile, false);
+      salsa.initDefaultNavBar();
     });
   };
 

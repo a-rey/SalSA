@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>SalSA</title>
+    <meta charset="utf-8">
+    <meta name="description" content="null">
+    <meta name="author" content="0xdeadbeef">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/salsa.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.2/css/bulma.min.css">
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- MAIN PAGE:                                                             -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <section class="hero is-dark is-medium">
       <div class="hero-head">
         <nav class="navbar is-dark">
@@ -56,7 +63,7 @@
         <div class="file is-centered is-boxed">
           <label class="file-label">
             <div class="control">
-              <input id="pe-uploader" class="file-input" type="file">
+              <input id="uploader" class="file-input" type="file">
               <span class="file-cta">
                 <span class="file-icon">
                   <i class="fas fa-upload"></i>
@@ -103,48 +110,30 @@
         <p class="subtitle">TODO: need a simple video of usage</p>
       </div>
     </section>
-    <script defer="" type="text/javascript" src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
-    <script defer="" type="text/javascript" src="js/pe.js"></script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- MISC JAVASCRIPT:                                                       -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <script defer="" type="text/javascript" src="https://use.fontawesome.com/releases/v5.13.0/js/all.js"></script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- CORE JAVASCRIPT:                                                       -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <script defer="" type="text/javascript" src="js/main.js"></script>
+    <script defer="" type="text/javascript" src="js/utils.js"></script>
+    <script defer="" type="text/javascript" src="js/magic.js"></script>
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!-- TEMPLATES: -->
+    <!-- PE FORMAT JAVASCRIPT:                                                  -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <!-- Report Navigation Bar: -->
-    <script id="report-navbar-template" type="text/template">
-      <nav class="navbar is-dark is-fixed-top">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="">
-            <img src="images/salsa.png">
-          </a>
-          <div class="navbar-burger burger" data-target="reportNav">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        <div class="navbar-menu" id="reportNav">
-          <div class="navbar-start">
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">Report</a>
-              <div class="navbar-dropdown">
-                <a data-target="report-overview" class="salsa-pane-link navbar-item is-active">Overview</a>
-                <hr class="navbar-divider">
-                <a data-target="report-dos" class="salsa-pane-link navbar-item">DOS Header</a>
-                <a data-target="report-pe" class="salsa-pane-link navbar-item">PE Header</a>
-                <a data-target="report-image" class="salsa-pane-link navbar-item">Image Header</a>
-                <a data-target="report-data-directories" class="salsa-pane-link navbar-item">Data Directories</a>
-                <a data-target="report-sections" class="salsa-pane-link navbar-item">Sections</a>
-                <hr class="navbar-divider">
-                <a data-target="report-alerts" class="salsa-pane-link navbar-item">Alerts</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </script>
-    <!-- Report Overview Pane: -->
-    <script id="report-overview-template" type="text/template">
-      <section id="report-overview" class="section">
+    <script defer="" type="text/javascript" src="js/pe/pe.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/templates/report/navbar.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/templates/report/overview.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/templates/report/dos_header.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/templates/report/coff_header.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/templates/report/image_header.js"></script>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- TEMPLATES - PE REPORT:                                                 -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <template id="template-pe-report-overview">
+      <section id="pe-report-overview" class="section">
         <div class="container">
           <h1 class="title">Information</h1>
           <table class="table is-striped is-hoverable is-fullwidth">
@@ -212,72 +201,199 @@
           </table>
         </div>
       </section>
-    </script>
-    <!-- Report PE Header Pane: -->
-    <script id="report-pe-template" type="text/template">
-      <section id="report-pe" class="section is-hidden">
-        <div class="container">
-          <h1 class="title">PE Header (Also Called COFF Header)
-            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#coff-file-header-object-and-image" class="button is-small is-link is-rounded">
-              <span class="icon is-small">
-                <i class="fas fa-question"></i>
-              </span>
-            </a>
-          </h1>
-          <table class="table is-striped is-hoverable is-fullwidth">
-            <tbody>
-              <tr>
-                <td>Signature</td>
-                <td><span class="is-family-code">{{Signature}}</span></td>
-              </tr>
-              <tr>
-                <td>Machine
-                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#machine-types" class="button is-small is-link is-rounded">
-                    <span class="icon is-small">
-                      <i class="fas fa-question"></i>
-                    </span>
-                  </a>
-                </td>
-                <td><span class="is-family-code">{{Machine}}</span></td>
-              </tr>
-              <tr>
-                <td>NumberOfSections</td>
-                <td><span class="is-family-code">{{NumberOfSections}}</span></td>
-              </tr>
-              <tr>
-                <td>TimeDateStamp</td>
-                <td><span class="is-family-code">{{TimeDateStamp}}</span></td>
-              </tr>
-              <tr>
-                <td>PointerToSymbolTable</td>
-                <td><span class="is-family-code">{{PointerToSymbolTable}}</span></td>
-              </tr>
-              <tr>
-                <td>NumberOfSymbols</td>
-                <td><span class="is-family-code">{{NumberOfSymbols}}</span></td>
-              </tr>
-              <tr>
-                <td>SizeOfOptionalHeader</td>
-                <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
-              </tr>
-              <tr>
-                <td>Characteristics
-                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#characteristics" class="button is-small is-link is-rounded">
-                    <span class="icon is-small">
-                      <i class="fas fa-question"></i>
-                    </span>
-                  </a>
-                </td>
-                <td><span class="is-family-code">{{Characteristics}}</span></td>
-              </tr>
-            </tbody>
-          </table>
+    </template>
+    <template id="template-pe-report-navbar">
+      <nav id="pe-report-navbar" role="navigation" aria-label="main navigation" class="navbar is-dark is-fixed-top">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="">
+            <img src="images/salsa.png">
+          </a>
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="reportNav">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
         </div>
-      </section>
-    </script>
-    <!-- Report IMAGE Header Pane: -->
-    <script id="report-image-template" type="text/template">
-      <section id="report-image" class="section is-hidden">
+        <div class="navbar-menu" id="reportNav">
+          <div class="navbar-start">
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">Report</a>
+              <div class="navbar-dropdown">
+                <a data-target="pe-report-overview" class="navbar-item is-active">Overview</a>
+                <hr class="navbar-divider">pane
+                <a data-target="pe-report-dos" class="navbar-item">DOS Header</a>
+                <a data-target="pe-report-coff" class="navbar-item">PE Header</a>
+                <a data-target="pe-report-image" class="navbar-item">Image Header</a>
+                <a class="navbar-item">Data Directories</a>
+                <a class="navbar-item">Sections</a>
+                <hr class="navbar-divider">
+                <a class="navbar-item">Alerts</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </template>
+    <template id="template-pe-report-dos">
+        <section id="pe-report-dos" class="section is-hidden">
+          <div class="container">
+            <h1 class="title">Header</h1>
+            <table class="table is-striped is-hoverable is-fullwidth">
+              <tbody>
+                <tr>
+                  <td>e_magic</td>
+                  <td><span class="is-family-code">{{e_magic}}</span></td>
+                  <td>Magic number ('MZ' in ASCII)</td>
+                </tr>
+                <tr>
+                  <td>e_cblp</td>
+                  <td><span class="is-family-code">{{e_cblp}}</span></td>
+                  <td>Bytes in last page of file</td>
+                </tr>
+                <tr>
+                  <td>e_cp</td>
+                  <td><span class="is-family-code">{{e_cp}}</span></td>
+                  <td>Number of pages in file</td>
+                </tr>
+                <tr>
+                  <td>e_crlc</td>
+                  <td><span class="is-family-code">{{e_crlc}}</span></td>
+                  <td>Relocation items</td>
+                </tr>
+                <tr>
+                  <td>e_cparhdr</td>
+                  <td><span class="is-family-code">{{e_cparhdr}}</span></td>
+                  <td>Number of paragraphs in header</td>
+                </tr>
+                <tr>
+                  <td>e_minalloc</td>
+                  <td><span class="is-family-code">{{e_minalloc}}</span></td>
+                  <td>Minimum extra paragraphs needed</td>
+                </tr>
+                <tr>
+                  <td>e_maxalloc</td>
+                  <td><span class="is-family-code">{{e_maxalloc}}</span></td>
+                  <td>Maximum extra paragraphs needed</td>
+                </tr>
+                <tr>
+                  <td>e_ss</td>
+                  <td><span class="is-family-code">{{e_ss}}</span></td>
+                  <td>Initial (relative) SS value</td>
+                </tr>
+                <tr>
+                  <td>e_sp</td>
+                  <td><span class="is-family-code">{{e_sp}}</span></td>
+                  <td>Initial SP value</td>
+                </tr>
+                <tr>
+                  <td>e_csum</td>
+                  <td><span class="is-family-code">{{e_csum}}</span></td>
+                  <td>Checksum</td>
+                </tr>
+                <tr>
+                  <td>e_ip</td>
+                  <td><span class="is-family-code">{{e_ip}}</span></td>
+                  <td>Initial IP value</td>
+                </tr>
+                <tr>
+                  <td>e_cs</td>
+                  <td><span class="is-family-code">{{e_cs}}</span></td>
+                  <td>Initial (relative) CS value</td>
+                </tr>
+                <tr>
+                  <td>e_lfarlc</td>
+                  <td><span class="is-family-code">{{e_lfarlc}}</span></td>
+                  <td>File address of relocation table</td>
+                </tr>
+                <tr>
+                  <td>e_ovno</td>
+                  <td><span class="is-family-code">{{e_ovno}}</span></td>
+                  <td>Overlay number</td>
+                </tr>
+                <tr>
+                  <td>e_res</td>
+                  <td><span class="is-family-code">{{e_res}}</span></td>
+                  <td><strong>Reserved</strong></td>
+                </tr>
+                <tr>
+                  <td>e_oemid</td>
+                  <td><span class="is-family-code">{{e_oemid}}</span></td>
+                  <td>OEM identifier (for <span class="is-family-code">e_oeminfo</span>)</td>
+                </tr>
+                <tr>
+                  <td>e_oeminfo</td>
+                  <td><span class="is-family-code">{{e_oeminfo}}</span></td>
+                  <td>OEM information (<span class="is-family-code">e_oemid</span> specific)</td>
+                </tr>
+                <tr>
+                  <td>e_res2</td>
+                  <td><span class="is-family-code">{{e_res2}}</span></td>
+                  <td><strong>Reserved</strong></td>
+                </tr>
+                <tr>
+                  <td>e_lfanew</td>
+                  <td><span class="is-family-code">{{e_lfanew}}</span></td>
+                  <td>File address of the PE header</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr>
+          <div class="container">
+            <h1 class="title">DOS Stub Program
+              <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#ms-dos-stub-image-only" class="button is-small is-link is-rounded">
+                <span class="icon is-small">
+                  <i class="fas fa-question"></i>
+                </span>
+              </a>
+            </h1>
+            <pre style="white-space:pre-wrap;word-wrap:break-word" class="is-family-code">{{DOS_STUB}}</pre>
+          </div>
+          <hr>
+          <div class="container">
+            <h1 class="title">Reference: Standard DOS Stub Program from GCC Compiler:
+              <a target="_blank" href="https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#MS-DOS_header" class="button is-small is-link is-rounded">
+                <span class="icon is-small">
+                  <i class="fas fa-question"></i>
+                </span>
+              </a>
+            </h1>
+            <pre class="is-family-monospace">
+        ; Using NASM with Intel Syntax
+        push cs        ; push CS onto the stack
+        pop ds         ; set DS to CS
+
+        ; this means that Data Segment and Code Segment point to the same
+        ; 64k byte area of memory. without this we would not be able
+        ; to load any data.
+
+        mov dx,message ; load address of message
+        mov ah, 09     ; ah = 9 is the DOS interrupt print a string
+        int 0x21
+        mov ax,0x4c01  ; terminate the program
+        int 0x21
+
+        ; 0Dh is the 'Carriage return' ASCII code
+        ; 0Ah is the 'Line feed' ASCII code
+        ; '$' is the string-terminator in DOS
+        message db "This program cannot be run in DOS mode.", 0x0d, 0x0d, 0x0a, '$'</pre>
+          </div>
+          <hr>
+          <div class="container">
+            <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program:</h1>
+            <pre class="is-family-monospace">
+        00000000  0E      push cs
+        00000001  1F      pop ds
+        00000002  BA0E00  mov dx,0xe
+        00000005  B409    mov ah,0x9
+        00000007  CD21    int 0x21
+        00000009  B8014C  mov ax,0x4c01
+        0000000C  CD21    int 0x21</pre>
+          </div>
+        </section>
+    </template>
+    <template id="template-pe-report-image">
+      <section id="pe-report-image" class="section is-hidden">
         <div class="container">
           <h1 class="title">Image "Optional" Header
             <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-standard-fields-image-only" class="button is-small is-link is-rounded">
@@ -426,166 +542,67 @@
           </table>
         </div>
       </section>
-    </script>
-    <!-- Report DOS Header Pane: -->
-    <script id="report-dos-template" type="text/template">
-      <section id="report-dos" class="section is-hidden">
+    </template>
+    <template id="template-pe-report-coff">
+      <section id="pe-report-coff" class="section is-hidden">
         <div class="container">
-          <h1 class="title">Header</h1>
+          <h1 class="title">PE Header (Also Called COFF Header)
+            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#coff-file-header-object-and-image" class="button is-small is-link is-rounded">
+              <span class="icon is-small">
+                <i class="fas fa-question"></i>
+              </span>
+            </a>
+          </h1>
           <table class="table is-striped is-hoverable is-fullwidth">
             <tbody>
               <tr>
-                <td>e_magic</td>
-                <td><span class="is-family-code">{{e_magic}}</span></td>
-                <td>Magic number ('MZ' in ASCII)</td>
+                <td>Signature</td>
+                <td><span class="is-family-code">{{Signature}}</span></td>
               </tr>
               <tr>
-                <td>e_cblp</td>
-                <td><span class="is-family-code">{{e_cblp}}</span></td>
-                <td>Bytes in last page of file</td>
+                <td>Machine
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#machine-types" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
+                <td><span class="is-family-code">{{Machine}}</span></td>
               </tr>
               <tr>
-                <td>e_cp</td>
-                <td><span class="is-family-code">{{e_cp}}</span></td>
-                <td>Number of pages in file</td>
+                <td>NumberOfSections</td>
+                <td><span class="is-family-code">{{NumberOfSections}}</span></td>
               </tr>
               <tr>
-                <td>e_crlc</td>
-                <td><span class="is-family-code">{{e_crlc}}</span></td>
-                <td>Relocation items</td>
+                <td>TimeDateStamp</td>
+                <td><span class="is-family-code">{{TimeDateStamp}}</span></td>
               </tr>
               <tr>
-                <td>e_cparhdr</td>
-                <td><span class="is-family-code">{{e_cparhdr}}</span></td>
-                <td>Number of paragraphs in header</td>
+                <td>PointerToSymbolTable</td>
+                <td><span class="is-family-code">{{PointerToSymbolTable}}</span></td>
               </tr>
               <tr>
-                <td>e_minalloc</td>
-                <td><span class="is-family-code">{{e_minalloc}}</span></td>
-                <td>Minimum extra paragraphs needed</td>
+                <td>NumberOfSymbols</td>
+                <td><span class="is-family-code">{{NumberOfSymbols}}</span></td>
               </tr>
               <tr>
-                <td>e_maxalloc</td>
-                <td><span class="is-family-code">{{e_maxalloc}}</span></td>
-                <td>Maximum extra paragraphs needed</td>
+                <td>SizeOfOptionalHeader</td>
+                <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
               </tr>
               <tr>
-                <td>e_ss</td>
-                <td><span class="is-family-code">{{e_ss}}</span></td>
-                <td>Initial (relative) SS value</td>
-              </tr>
-              <tr>
-                <td>e_sp</td>
-                <td><span class="is-family-code">{{e_sp}}</span></td>
-                <td>Initial SP value</td>
-              </tr>
-              <tr>
-                <td>e_csum</td>
-                <td><span class="is-family-code">{{e_csum}}</span></td>
-                <td>Checksum</td>
-              </tr>
-              <tr>
-                <td>e_ip</td>
-                <td><span class="is-family-code">{{e_ip}}</span></td>
-                <td>Initial IP value</td>
-              </tr>
-              <tr>
-                <td>e_cs</td>
-                <td><span class="is-family-code">{{e_cs}}</span></td>
-                <td>Initial (relative) CS value</td>
-              </tr>
-              <tr>
-                <td>e_lfarlc</td>
-                <td><span class="is-family-code">{{e_lfarlc}}</span></td>
-                <td>File address of relocation table</td>
-              </tr>
-              <tr>
-                <td>e_ovno</td>
-                <td><span class="is-family-code">{{e_ovno}}</span></td>
-                <td>Overlay number</td>
-              </tr>
-              <tr>
-                <td>e_res</td>
-                <td><span class="is-family-code">{{e_res}}</span></td>
-                <td><strong>Reserved</strong></td>
-              </tr>
-              <tr>
-                <td>e_oemid</td>
-                <td><span class="is-family-code">{{e_oemid}}</span></td>
-                <td>OEM identifier (for <span class="is-family-code">e_oeminfo</span>)</td>
-              </tr>
-              <tr>
-                <td>e_oeminfo</td>
-                <td><span class="is-family-code">{{e_oeminfo}}</span></td>
-                <td>OEM information (<span class="is-family-code">e_oemid</span> specific)</td>
-              </tr>
-              <tr>
-                <td>e_res2</td>
-                <td><span class="is-family-code">{{e_res2}}</span></td>
-                <td><strong>Reserved</strong></td>
-              </tr>
-              <tr>
-                <td>e_lfanew</td>
-                <td><span class="is-family-code">{{e_lfanew}}</span></td>
-                <td>File address of the PE header</td>
+                <td>Characteristics
+                  <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#characteristics" class="button is-small is-link is-rounded">
+                    <span class="icon is-small">
+                      <i class="fas fa-question"></i>
+                    </span>
+                  </a>
+                </td>
+                <td><span class="is-family-code">{{Characteristics}}</span></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <hr>
-        <div class="container">
-          <h1 class="title">DOS Stub Program
-            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#ms-dos-stub-image-only" class="button is-small is-link is-rounded">
-              <span class="icon is-small">
-                <i class="fas fa-question"></i>
-              </span>
-            </a>
-          </h1>
-          <pre style="white-space:pre-wrap;word-wrap:break-word" class="is-family-code">{{DOS_STUB}}</pre>
-        </div>
-        <hr>
-        <div class="container">
-          <h1 class="title">Reference: Standard DOS Stub Program from GCC Compiler:
-            <a target="_blank" href="https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#MS-DOS_header" class="button is-small is-link is-rounded">
-              <span class="icon is-small">
-                <i class="fas fa-question"></i>
-              </span>
-            </a>
-          </h1>
-          <pre class="is-family-monospace">
-; Using NASM with Intel Syntax
-push cs        ; push CS onto the stack
-pop ds         ; set DS to CS
-
-; this means that Data Segment and Code Segment point to the same
-; 64k byte area of memory. without this we would not be able
-; to load any data.
-
-mov dx,message ; load address of message
-mov ah, 09     ; ah = 9 is the DOS interrupt print a string
-int 0x21
-mov ax,0x4c01  ; terminate the program
-int 0x21
-
-; 0Dh is the 'Carriage return' ASCII code
-; 0Ah is the 'Line feed' ASCII code
-; '$' is the string-terminator in DOS
-message db "This program cannot be run in DOS mode.", 0x0d, 0x0d, 0x0a, '$'</pre>
-        </div>
-        <hr>
-        <div class="container">
-          <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program:</h1>
-          <pre class="is-family-monospace">
-00000000  0E      push cs
-00000001  1F      pop ds
-00000002  BA0E00  mov dx,0xe
-00000005  B409    mov ah,0x9
-00000007  CD21    int 0x21
-00000009  B8014C  mov ax,0x4c01
-0000000C  CD21    int 0x21</pre>
-        </div>
       </section>
-    </script>
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    </template>
   </body>
 </html>

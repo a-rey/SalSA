@@ -321,7 +321,7 @@ var PE = (() => {
 
   // unpack binary structures from file data
   async function _unpack(struct, fileOffset) {
-    var data = await read(_file, fileOffset, _size(struct));
+    var data = await salsa.utils.read(_file, fileOffset, _size(struct));
     for (var i = 0, structOffset = 0, result = {}; i < struct.length; i++) {
       result[struct[i][0]] = data.slice(structOffset, structOffset + struct[i][1]);
       structOffset += struct[i][1];
@@ -339,9 +339,9 @@ var PE = (() => {
   // parse DOS stub
   // https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#ms-dos-stub-image-only
   async function _DOS_STUB() {
-    var stubLength = uint(_data['DOS_HEADER']['e_lfanew']) - _size(_headers['DOS_HEADER']);
-    _data['DOS_STUB'] = await read(_file, _size(_headers['DOS_HEADER']), stubLength);
-    _offset += uint(_data['DOS_HEADER']['e_lfanew']);
+    var stubLength = salsa.utils.uint(_data['DOS_HEADER']['e_lfanew']) - _size(_headers['DOS_HEADER']);
+    _data['DOS_STUB'] = await salsa.utils.read(_file, _size(_headers['DOS_HEADER']), stubLength);
+    _offset += salsa.utils.uint(_data['DOS_HEADER']['e_lfanew']);
   }
 
   // parse PE header (COFF header)
@@ -357,20 +357,20 @@ var PE = (() => {
   // (x64) https://source.winehq.org/source/include/winnt.h#2838
   // https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-standard-fields-image-only
   async function _IMAGE_HEADER() {
-    if (uint(_data['PE_HEADER']['SizeOfOptionalHeader']) > 0) {
-      var arch = await read(_file, _offset, 2);
-      if (uint(arch) == 0x20b) {
+    if (salsa.utils.uint(_data['PE_HEADER']['SizeOfOptionalHeader']) > 0) {
+      var arch = await salsa.utils.read(_file, _offset, 2);
+      if (salsa.utils.uint(arch) == 0x20b) {
         // x64
         _x64 = true;
         _data['IMAGE_HEADER'] = await _unpack(_headers['IMAGE_HEADER_64'], _offset);
         _offset += _size(_headers['IMAGE_HEADER_64']);
-      } else if (uint(arch) == 0x10b) {
+      } else if (salsa.utils.uint(arch) == 0x10b) {
         // x86
         _x64 = false;
         _data['IMAGE_HEADER'] = await _unpack(_headers['IMAGE_HEADER_32'], _offset);
         _offset += _size(_headers['IMAGE_HEADER_32']);
       } else {
-        throw('_IMAGE_HEADER(): Unknown machine type in header: ' + uint(arch));
+        throw('_IMAGE_HEADER(): Unknown machine type in header: ' + salsa.utils.uint(arch));
       }
     } else {
       throw('_IMAGE_HEADER(): IMAGE header size is 0');
@@ -381,7 +381,7 @@ var PE = (() => {
   // https://source.winehq.org/source/include/winnt.h#2831
   // https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-data-directories-image-only
   async function _DATA_DIRECTORY() {
-    var numDirs = uint(_data['IMAGE_HEADER']['NumberOfRvaAndSizes']);
+    var numDirs = salsa.utils.uint(_data['IMAGE_HEADER']['NumberOfRvaAndSizes']);
     // only parse data directories that are specified
     var dirFmt = _headers['DATA_DIRECTORY'].slice(Math.min(numDirs * 2, _headers['DATA_DIRECTORY'].length));
     _data['DATA_DIRECTORY'] = await _unpack(_headers['DATA_DIRECTORY'], _offset);
@@ -393,7 +393,7 @@ var PE = (() => {
   // https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#section-table-section-headers
   async function _SECTION_HEADERS() {
     _data['SECTIONS'] = [];
-    for (var i = 0; i < uint(_data['PE_HEADER']['NumberOfSections']); i++) {
+    for (var i = 0; i < salsa.utils.uint(_data['PE_HEADER']['NumberOfSections']); i++) {
       var section = await _unpack(_headers['SECTION_HEADER'], _offset);
       _offset += _size(_headers['SECTION_HEADER']);
       _data['SECTIONS'].push(section);
@@ -407,55 +407,6 @@ var PE = (() => {
     _data['PE_HEADER'] = await _unpack(_headers['PE_HEADER'], _offset);
     _offset += _size(_headers['PE_HEADER']);
   }
-
-  // convert a little endian ArrayBuffer to an unsigned integer
-  function uint(buffer) {
-    var r = 0;
-    const a = new Uint8Array(buffer);
-    for (var i = 0; i < a.length; i++) {
-      r += (a[i] << (8 * i));
-    }
-    return r;
-  }
-
-  // convert a little endian ArrayBuffer of bytes to an ASCII string
-  function str(buffer) {
-    var r = '';
-    const a = new Uint8Array(buffer);
-    for (var i = 0; i < a.length; i++) {
-      r += String.fromCharCode(a[i]);
-    }
-    return r;
-  }
-
-  // convert a little endian ArrayBuffer of bytes to a hex string
-  function hex(buffer) {
-    var r = '';
-    const a = new DataView(buffer);
-    for (var i = (a.byteLength - 1); i >= 0; i--) {
-      var c = a.getUint8(i).toString(16);
-      // zero pad one byte results
-      if (c.length < 2) {
-        c = '0' + c;
-      }
-      r += c;
-    }
-    return r;
-  }
-
-  // browser interaction with uploaded files using promises
-  const read = (file, offset, length) => new Promise((resolve, reject) => {
-    // FileReader API: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-    var fr = new FileReader();
-    fr.onload = (e) => {
-      resolve(e.target.result);
-    };
-    fr.onerror = (e) => {
-      e.abort();
-      return reject(this);
-    };
-    fr.readAsArrayBuffer(file.slice(offset, offset + length));
-  });
 
   // parse an executable from start to end
   async function parse(file) {
@@ -476,10 +427,6 @@ var PE = (() => {
   // object interface to the application
   var _api = {
     'parse': parse,
-    'read': read,
-    'uint': uint,
-    'str': str,
-    'hex': hex,
   };
   // add static constants
   for (var k in _static) {
