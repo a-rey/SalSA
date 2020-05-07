@@ -11,22 +11,25 @@ salsa.templates['PE'].push((() => {
   }
 
   // make a Bulma CSS notification from a PE header Characteristic flag
-  function makeNotification(key, flag, type) {
-    var n = document.createElement('div');
-    n.classList.add('notification');
+  function makeMessage(key, flag, type) {
+    var style = ''
     switch (type) {
       case LEVEL.INFO:
-        n.classList.add('is-info');
+        style = 'is-info';
         break;
       case LEVEL.WARN:
-        n.classList.add('is-warning');
+        style = 'is-warning';
         break;
       case LEVEL.ERROR:
-        n.classList.add('is-danger');
+        style = 'is-danger';
         break;
     }
-    n.innerHTML = '<strong>' + key + '</strong>: ' + salsa.utils.getCharacteristicDescriptionPE(flag);
-    return n;
+    const msg = salsa.utils.getCharacteristicDescriptionPE(flag);
+    return `
+    <article class="message ${style}">
+      <div class="message-header"><p>${key}:</p></div>
+      <div class="message-body">${msg}</div>
+    </article>`;
   }
 
   async function render(pedata) {
@@ -56,61 +59,61 @@ salsa.templates['PE'].push((() => {
     // parse characteristics and add notifications
     var notifications = '';
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_RELOCS_STRIPPED) {
-      notifications += makeNotification('IMAGE_FILE_RELOCS_STRIPPED', PE.IMAGE_FILE_RELOCS_STRIPPED, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_RELOCS_STRIPPED', PE.IMAGE_FILE_RELOCS_STRIPPED, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_EXECUTABLE_IMAGE) {
-      notifications += makeNotification('IMAGE_FILE_EXECUTABLE_IMAGE', PE.IMAGE_FILE_EXECUTABLE_IMAGE, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_EXECUTABLE_IMAGE', PE.IMAGE_FILE_EXECUTABLE_IMAGE, LEVEL.INFO);
     } else {
       // should always be set
-      notifications += makeNotification('IMAGE_FILE_EXECUTABLE_IMAGE (missing?)', PE.IMAGE_FILE_EXECUTABLE_IMAGE, LEVEL.ERROR).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_EXECUTABLE_IMAGE (missing?)', PE.IMAGE_FILE_EXECUTABLE_IMAGE, LEVEL.ERROR);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_LINE_NUMS_STRIPPED) {
       // should be zero
-      notifications += makeNotification('IMAGE_FILE_LINE_NUMS_STRIPPED', PE.IMAGE_FILE_LINE_NUMS_STRIPPED, LEVEL.WARN).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_LINE_NUMS_STRIPPED', PE.IMAGE_FILE_LINE_NUMS_STRIPPED, LEVEL.WARN);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_LOCAL_SYMS_STRIPPED) {
       // should be zero
-      notifications += makeNotification('IMAGE_FILE_LOCAL_SYMS_STRIPPED', PE.IMAGE_FILE_LOCAL_SYMS_STRIPPED, LEVEL.WARN).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_LOCAL_SYMS_STRIPPED', PE.IMAGE_FILE_LOCAL_SYMS_STRIPPED, LEVEL.WARN);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_AGGRESSIVE_WS_TRIM) {
       // should not be set
-      notifications += makeNotification('IMAGE_FILE_AGGRESSIVE_WS_TRIM', PE.IMAGE_FILE_AGGRESSIVE_WS_TRIM, LEVEL.ERROR).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_AGGRESSIVE_WS_TRIM', PE.IMAGE_FILE_AGGRESSIVE_WS_TRIM, LEVEL.ERROR);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_LARGE_ADDRESS_AWARE) {
-      notifications += makeNotification('IMAGE_FILE_LARGE_ADDRESS_AWARE', PE.IMAGE_FILE_LARGE_ADDRESS_AWARE, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_LARGE_ADDRESS_AWARE', PE.IMAGE_FILE_LARGE_ADDRESS_AWARE, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_RESERVED) {
       // should not be set
-      notifications += makeNotification('IMAGE_FILE_RESERVED', PE.IMAGE_FILE_RESERVED, LEVEL.ERROR).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_RESERVED', PE.IMAGE_FILE_RESERVED, LEVEL.ERROR);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_BYTES_REVERSED_LO) {
       // should be zero
-      notifications += makeNotification('IMAGE_FILE_BYTES_REVERSED_LO', PE.IMAGE_FILE_BYTES_REVERSED_LO, LEVEL.WARN).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_BYTES_REVERSED_LO', PE.IMAGE_FILE_BYTES_REVERSED_LO, LEVEL.WARN);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_32BIT_MACHINE) {
-      notifications += makeNotification('IMAGE_FILE_32BIT_MACHINE', PE.IMAGE_FILE_32BIT_MACHINE, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_32BIT_MACHINE', PE.IMAGE_FILE_32BIT_MACHINE, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_DEBUG_STRIPPED) {
-      notifications += makeNotification('IMAGE_FILE_DEBUG_STRIPPED', PE.IMAGE_FILE_DEBUG_STRIPPED, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_DEBUG_STRIPPED', PE.IMAGE_FILE_DEBUG_STRIPPED, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP) {
-      notifications += makeNotification('IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP', PE.IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP', PE.IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_NET_RUN_FROM_SWAP) {
-      notifications += makeNotification('IMAGE_FILE_NET_RUN_FROM_SWAP', PE.IMAGE_FILE_NET_RUN_FROM_SWAP, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_NET_RUN_FROM_SWAP', PE.IMAGE_FILE_NET_RUN_FROM_SWAP, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_SYSTEM) {
-      notifications += makeNotification('IMAGE_FILE_SYSTEM', PE.IMAGE_FILE_SYSTEM, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_SYSTEM', PE.IMAGE_FILE_SYSTEM, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_DLL) {
-      notifications += makeNotification('IMAGE_FILE_DLL', PE.IMAGE_FILE_DLL, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_DLL', PE.IMAGE_FILE_DLL, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_UP_SYSTEM_ONLY) {
-      notifications += makeNotification('IMAGE_FILE_UP_SYSTEM_ONLY', PE.IMAGE_FILE_UP_SYSTEM_ONLY, LEVEL.INFO).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_UP_SYSTEM_ONLY', PE.IMAGE_FILE_UP_SYSTEM_ONLY, LEVEL.INFO);
     }
     if (salsa.utils.uint(pedata['PE_HEADER']['Characteristics'], true) & PE.IMAGE_FILE_BYTES_REVERSED_HI) {
       // should be zero
-      notifications += makeNotification('IMAGE_FILE_BYTES_REVERSED_HI', PE.IMAGE_FILE_BYTES_REVERSED_HI, LEVEL.WARN).outerHTML;
+      notifications += makeMessage('IMAGE_FILE_BYTES_REVERSED_HI', PE.IMAGE_FILE_BYTES_REVERSED_HI, LEVEL.WARN);
     }
     template.innerHTML = template.innerHTML.replace(/{{CHARACTERISTICS}}/g, notifications);
     // add formatted html to DOM
