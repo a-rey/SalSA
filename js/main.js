@@ -96,6 +96,46 @@
     });
   };
 
+  // adds all custom report event listeners for dynamic report content
+  salsa.addReportListeners = () => {
+    // find all modal links and add listener
+    document.querySelectorAll('.salsa-modal-description').forEach((ele) => {
+      ele.addEventListener('click', (event) => {
+        // create modal container
+        var div = document.createElement('div');
+        // get the target & reference from the "data-target" attribute
+        const target = ele.dataset.target;
+        const reference = ele.dataset.reference;
+        // in the current parser, find that value and make a modal
+        var html = `
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <header class="modal-card-head">
+            <p class="modal-card-title"><span class="is-family-code">${target}</span></p>
+            <button class="delete" aria-label="close"></button>
+          </header>
+          <section class="modal-card-body">
+            ${salsa.parser.descriptions.get(reference + '.' + target)}
+          </section>
+          <footer class="modal-card-foot">
+            <a href="${salsa.parser.descriptions.get(reference)}" target="_blank" class="button is-info">Reference</a>
+          </footer>
+        </div>`;
+        div.innerHTML = html;
+        div.classList.add('modal');
+        div.classList.add('is-active');
+        // add html to DOM
+        document.body.appendChild(div);
+        // register delete listener for new modal
+        div.querySelectorAll('.delete').forEach((ele) => {
+          ele.addEventListener('click', (event) => {
+            document.body.removeChild(div);
+          });
+        });
+      });
+    });
+  };
+
   // looks through magic file signatures to identify file type
   salsa.getFileFormat = async () => {
     // loop through known file signatures
@@ -149,6 +189,8 @@
       }
       // TODO: apply rules
       await salsa.updateProgressBar('100', 'done!');
+      // apply any listeners to reports
+      salsa.addReportListeners();
     } else {
       console.log('invalid')
     }

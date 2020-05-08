@@ -18,7 +18,7 @@ salsa.templates['PE'].push((() => {
       sha256hash = salsa.utils.hex(sha256, true); // reverse due to little endian
     });
     // identify machine type
-    const machine_type = salsa.utils.getMachineTypeDescriptionPE(salsa.utils.uint(pedata['PE_HEADER']['Machine'], true));
+    const machine_type = PE.utils.getMachineType(salsa.utils.uint(pedata['PE_HEADER']['Machine'], true));
     // get compilation time (reverse due to little endian)
     const creation_time = new Date(1000 * salsa.utils.uint(pedata['PE_HEADER']['TimeDateStamp'], true));
     // get human readable file size

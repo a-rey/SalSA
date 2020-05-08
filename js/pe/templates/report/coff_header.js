@@ -24,7 +24,7 @@ salsa.templates['PE'].push((() => {
         style = 'is-danger';
         break;
     }
-    const msg = salsa.utils.getCharacteristicDescriptionPE(flag);
+    const msg = PE.utils.getImageCharacteristic(flag);
     return `
     <article class="message ${style}">
       <div class="message-header"><p>${key}:</p></div>
@@ -51,7 +51,7 @@ salsa.templates['PE'].push((() => {
       }
     }
     // identify machine type description
-    const machine_type = salsa.utils.getMachineTypeDescriptionPE(salsa.utils.uint(pedata['PE_HEADER']['Machine'], true));
+    const machine_type = PE.utils.getMachineType(salsa.utils.uint(pedata['PE_HEADER']['Machine'], true));
     template.innerHTML = template.innerHTML.replace(/{{MACHINE_TYPE}}/g, machine_type);
     // set readable timestamp
     const timestamp = new Date(1000 * salsa.utils.uint(pedata['PE_HEADER']['TimeDateStamp'], true));

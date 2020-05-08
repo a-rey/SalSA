@@ -124,6 +124,8 @@
     <!-- PE FORMAT JAVASCRIPT:                                                  -->
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     <script defer="" type="text/javascript" src="js/pe/pe.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/utils.js"></script>
+    <script defer="" type="text/javascript" src="js/pe/descriptions.js"></script>
     <script defer="" type="text/javascript" src="js/pe/templates/report/navbar.js"></script>
     <script defer="" type="text/javascript" src="js/pe/templates/report/overview.js"></script>
     <script defer="" type="text/javascript" src="js/pe/templates/report/dos_header.js"></script>
@@ -152,7 +154,7 @@
                 <a data-target="pe-report-overview" class="navbar-item is-active">Overview</a>
                 <hr class="navbar-divider">pane
                 <a data-target="pe-report-dos" class="navbar-item">DOS Header & Stub</a>
-                <a data-target="pe-report-coff" class="navbar-item">PE Header</a>
+                <a data-target="pe-report-coff" class="navbar-item">PE/COFF Header</a>
                 <a data-target="pe-report-image" class="navbar-item">Image Header</a>
                 <a class="navbar-item">Data Directories</a>
                 <a class="navbar-item">Sections</a>
@@ -241,99 +243,80 @@
             <table class="table is-striped is-hoverable is-fullwidth">
               <tbody>
                 <tr>
-                  <td>e_magic</td>
+                  <td><a data-target="e_magic" data-reference="dos_header" class="salsa-modal-description">e_magic</a></td>
                   <td><span class="is-family-code">{{e_magic}}</span></td>
-                  <td>Magic number ('MZ' in ASCII)</td>
                 </tr>
                 <tr>
-                  <td>e_cblp</td>
+                  <td><a data-target="e_cblp" data-reference="dos_header" class="salsa-modal-description">e_cblp</a></td>
                   <td><span class="is-family-code">{{e_cblp}}</span></td>
-                  <td>Bytes in last page of file</td>
                 </tr>
                 <tr>
-                  <td>e_cp</td>
+                  <td><a data-target="e_cp" data-reference="dos_header" class="salsa-modal-description">e_cp</a></td>
                   <td><span class="is-family-code">{{e_cp}}</span></td>
-                  <td>Number of pages in file</td>
                 </tr>
                 <tr>
-                  <td>e_crlc</td>
+                  <td><a data-target="e_crlc" data-reference="dos_header" class="salsa-modal-description">e_crlc</a></td>
                   <td><span class="is-family-code">{{e_crlc}}</span></td>
-                  <td>Relocation items</td>
                 </tr>
                 <tr>
-                  <td>e_cparhdr</td>
+                  <td><a data-target="e_cparhdr" data-reference="dos_header" class="salsa-modal-description">e_cparhdr</a></td>
                   <td><span class="is-family-code">{{e_cparhdr}}</span></td>
-                  <td>Number of paragraphs in header</td>
                 </tr>
                 <tr>
-                  <td>e_minalloc</td>
+                  <td><a data-target="e_minalloc" data-reference="dos_header" class="salsa-modal-description">e_minalloc</a></td>
                   <td><span class="is-family-code">{{e_minalloc}}</span></td>
-                  <td>Minimum extra paragraphs needed</td>
                 </tr>
                 <tr>
-                  <td>e_maxalloc</td>
+                  <td><a data-target="e_maxalloc" data-reference="dos_header" class="salsa-modal-description">e_maxalloc</a></td>
                   <td><span class="is-family-code">{{e_maxalloc}}</span></td>
-                  <td>Maximum extra paragraphs needed</td>
                 </tr>
                 <tr>
-                  <td>e_ss</td>
+                  <td><a data-target="e_ss" data-reference="dos_header" class="salsa-modal-description">e_ss</a></td>
                   <td><span class="is-family-code">{{e_ss}}</span></td>
-                  <td>Initial (relative) SS value</td>
                 </tr>
                 <tr>
-                  <td>e_sp</td>
+                  <td><a data-target="e_sp" data-reference="dos_header" class="salsa-modal-description">e_sp</a></td>
                   <td><span class="is-family-code">{{e_sp}}</span></td>
-                  <td>Initial SP value</td>
                 </tr>
                 <tr>
-                  <td>e_csum</td>
+                  <td><a data-target="e_csum" data-reference="dos_header" class="salsa-modal-description">e_csum</a></td>
                   <td><span class="is-family-code">{{e_csum}}</span></td>
-                  <td>Checksum</td>
                 </tr>
                 <tr>
-                  <td>e_ip</td>
+                  <td><a data-target="e_ip" data-reference="dos_header" class="salsa-modal-description">e_ip</a></td>
                   <td><span class="is-family-code">{{e_ip}}</span></td>
-                  <td>Initial IP value</td>
                 </tr>
                 <tr>
-                  <td>e_cs</td>
+                  <td><a data-target="e_cs" data-reference="dos_header" class="salsa-modal-description">e_cs</a></td>
                   <td><span class="is-family-code">{{e_cs}}</span></td>
-                  <td>Initial (relative) CS value</td>
                 </tr>
                 <tr>
-                  <td>e_lfarlc</td>
+                  <td><a data-target="e_lfarlc" data-reference="dos_header" class="salsa-modal-description">e_lfarlc</a></td>
                   <td><span class="is-family-code">{{e_lfarlc}}</span></td>
-                  <td>File address of relocation table</td>
                 </tr>
                 <tr>
-                  <td>e_ovno</td>
+                  <td><a data-target="e_ovno" data-reference="dos_header" class="salsa-modal-description">e_ovno</a></td>
                   <td><span class="is-family-code">{{e_ovno}}</span></td>
-                  <td>Overlay number</td>
                 </tr>
                 <tr>
-                  <td>e_res</td>
+                  <td><a data-target="e_res" data-reference="dos_header" class="salsa-modal-description">e_res</a></td>
                   <td><span class="is-family-code">{{e_res}}</span></td>
-                  <td><strong>Reserved</strong></td>
                 </tr>
                 <tr>
-                  <td>e_oemid</td>
+                  <td><a data-target="e_oemid" data-reference="dos_header" class="salsa-modal-description">e_oemid</a></td>
                   <td><span class="is-family-code">{{e_oemid}}</span></td>
-                  <td>OEM identifier (for <span class="is-family-code">e_oeminfo</span>)</td>
                 </tr>
                 <tr>
-                  <td>e_oeminfo</td>
+                  <td><a data-target="e_oeminfo" data-reference="dos_header" class="salsa-modal-description">e_oeminfo</a></td>
                   <td><span class="is-family-code">{{e_oeminfo}}</span></td>
-                  <td>OEM information (<span class="is-family-code">e_oemid</span> specific)</td>
                 </tr>
                 <tr>
-                  <td>e_res2</td>
+                  <td><a data-target="e_res2" data-reference="dos_header" class="salsa-modal-description">e_res2</a></td>
                   <td><span class="is-family-code">{{e_res2}}</span></td>
-                  <td><strong>Reserved</strong></td>
                 </tr>
                 <tr>
-                  <td>e_lfanew</td>
+                  <td><a data-target="e_lfanew" data-reference="dos_header" class="salsa-modal-description">e_lfanew</a></td>
                   <td><span class="is-family-code">{{e_lfanew}}</span></td>
-                  <td>File offset of the PE/COFF header</td>
                 </tr>
               </tbody>
             </table>
@@ -343,7 +326,7 @@
             <h1 class="title">DOS Stub Program Hex Dump
               <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#ms-dos-stub-image-only" class="tag is-link">
                 <span class="icon">
-                  <i class="fas fa-question"></i>
+                  <i class="fas fa-search"></i>
                 </span>
               </a>
             </h1>
@@ -351,10 +334,10 @@
           </div>
           <hr>
           <div class="container">
-            <h1 class="title">Reference: Standard DOS Stub Program from GCC Compiler:
+            <h1 class="title">Reference: Standard DOS Stub Program from GCC Compiler
               <a target="_blank" href="https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#MS-DOS_header" class="tag is-link">
                 <span class="icon">
-                  <i class="fas fa-question"></i>
+                  <i class="fas fa-search"></i>
                 </span>
               </a>
             </h1>
@@ -362,7 +345,7 @@
           </div>
           <hr>
           <div class="container">
-            <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program:</h1>
+            <h1 class="title">Reference: Disassembled Version of GCC DOS Stub Program</h1>
             <pre class="is-family-monospace">{{REF_STUB_2}}</pre>
           </div>
         </section>
@@ -370,147 +353,148 @@
     <template id="template-pe-report-image">
       <section id="pe-report-image" class="section is-hidden">
         <div class="container">
-          <h1 class="title">Image "Optional" Header
-            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-standard-fields-image-only" class="tag is-link">
-              <span class="icon">
-                <i class="fas fa-question"></i>
-              </span>
-            </a>
-          </h1>
+          <h1 class="title">Image Header</h1>
           <table class="table is-striped is-hoverable is-fullwidth">
             <tbody>
               <tr>
-                <td>Magic
+                <td>
+                  <a data-target="Magic" data-reference="image_header" class="salsa-modal-description">Magic</a>
                   <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#optional-header-image-only" class="tag is-link">
                     <span class="icon">
-                      <i class="fas fa-question"></i>
+                      <i class="fas fa-search"></i>
                     </span>
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Magic}}</span></td>
               </tr>
               <tr>
-                <td>MajorLinkerVersion</td>
+                <td><a data-target="MajorLinkerVersion" data-reference="image_header" class="salsa-modal-description">MajorLinkerVersion</a></td>
                 <td><span class="is-family-code">{{MajorLinkerVersion}}</span></td>
               </tr>
               <tr>
-                <td>MinorLinkerVersion</td>
+                <td><a data-target="MinorLinkerVersion" data-reference="image_header" class="salsa-modal-description">MinorLinkerVersion</a></td>
                 <td><span class="is-family-code">{{MinorLinkerVersion}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfCode</td>
+                <td><a data-target="SizeOfCode" data-reference="image_header" class="salsa-modal-description">SizeOfCode</a></td>
                 <td><span class="is-family-code">{{SizeOfCode}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfInitializedData</td>
+                <td><a data-target="SizeOfInitializedData" data-reference="image_header" class="salsa-modal-description">SizeOfInitializedData</a></td>
                 <td><span class="is-family-code">{{SizeOfInitializedData}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfUninitializedData</td>
+                <td><a data-target="SizeOfUninitializedData" data-reference="image_header" class="salsa-modal-description">SizeOfUninitializedData</a></td>
                 <td><span class="is-family-code">{{SizeOfUninitializedData}}</span></td>
               </tr>
               <tr>
-                <td>AddressOfEntryPoint</td>
+                <td><a data-target="AddressOfEntryPoint" data-reference="image_header" class="salsa-modal-description">AddressOfEntryPoint</a></td>
                 <td><span class="is-family-code">{{AddressOfEntryPoint}}</span></td>
               </tr>
               <tr>
-                <td>BaseOfCode</td>
+                <td><a data-target="BaseOfCode" data-reference="image_header" class="salsa-modal-description">BaseOfCode</a></td>
                 <td><span class="is-family-code">{{BaseOfCode}}</span></td>
               </tr>
               <tr>
-                <td>ImageBase</td>
+                <td><a data-target="BaseOfData" data-reference="image_header" class="salsa-modal-description">BaseOfData</a></td>
+                <td><span class="is-family-code">{{BaseOfData}}</span></td>
+              </tr>
+              <tr>
+                <td><a data-target="ImageBase" data-reference="image_header" class="salsa-modal-description">ImageBase</a></td>
                 <td><span class="is-family-code">{{ImageBase}}</span></td>
               </tr>
               <tr>
-                <td>SectionAlignment</td>
+                <td><a data-target="SectionAlignment" data-reference="image_header" class="salsa-modal-description">SectionAlignment</a></td>
                 <td><span class="is-family-code">{{SectionAlignment}}</span></td>
               </tr>
               <tr>
-                <td>FileAlignment</td>
+                <td><a data-target="FileAlignment" data-reference="image_header" class="salsa-modal-description">FileAlignment</a></td>
                 <td><span class="is-family-code">{{FileAlignment}}</span></td>
               </tr>
               <tr>
-                <td>MajorOperatingSystemVersion</td>
+                <td><a data-target="MajorOperatingSystemVersion" data-reference="image_header" class="salsa-modal-description">MajorOperatingSystemVersion</a></td>
                 <td><span class="is-family-code">{{MajorOperatingSystemVersion}}</span></td>
               </tr>
               <tr>
-                <td>MinorOperatingSystemVersion</td>
+                <td><a data-target="MinorOperatingSystemVersion" data-reference="image_header" class="salsa-modal-description">MinorOperatingSystemVersion</a></td>
                 <td><span class="is-family-code">{{MinorOperatingSystemVersion}}</span></td>
               </tr>
               <tr>
-                <td>MajorImageVersion</td>
+                <td><a data-target="MajorImageVersion" data-reference="image_header" class="salsa-modal-description">MajorImageVersion</a></td>
                 <td><span class="is-family-code">{{MajorImageVersion}}</span></td>
               </tr>
               <tr>
-                <td>MinorImageVersion</td>
+                <td><a data-target="MinorImageVersion" data-reference="image_header" class="salsa-modal-description">MinorImageVersion</a></td>
                 <td><span class="is-family-code">{{MinorImageVersion}}</span></td>
               </tr>
               <tr>
-                <td>MajorSubsystemVersion</td>
+                <td><a data-target="MajorSubsystemVersion" data-reference="image_header" class="salsa-modal-description">MajorSubsystemVersion</a></td>
                 <td><span class="is-family-code">{{MajorSubsystemVersion}}</span></td>
               </tr>
               <tr>
-                <td>MinorSubsystemVersion</td>
+                <td><a data-target="MinorSubsystemVersion" data-reference="image_header" class="salsa-modal-description">MinorSubsystemVersion</a></td>
                 <td><span class="is-family-code">{{MinorSubsystemVersion}}</span></td>
               </tr>
               <tr>
-                <td>Win32VersionValue</td>
+                <td><a data-target="Win32VersionValue" data-reference="image_header" class="salsa-modal-description">Win32VersionValue</a></td>
                 <td><span class="is-family-code">{{Win32VersionValue}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfImage</td>
+                <td><a data-target="SizeOfImage" data-reference="image_header" class="salsa-modal-description">SizeOfImage</a></td>
                 <td><span class="is-family-code">{{SizeOfImage}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfHeaders</td>
+                <td><a data-target="SizeOfHeaders" data-reference="image_header" class="salsa-modal-description">SizeOfHeaders</a></td>
                 <td><span class="is-family-code">{{SizeOfHeaders}}</span></td>
               </tr>
               <tr>
-                <td>CheckSum</td>
+                <td><a data-target="CheckSum" data-reference="image_header" class="salsa-modal-description">CheckSum</a></td>
                 <td><span class="is-family-code">{{CheckSum}}</span></td>
               </tr>
               <tr>
-                <td>Subsystem
+                <td>
+                  <a data-target="Subsystem" data-reference="image_header" class="salsa-modal-description">Subsystem</a>
                   <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#windows-subsystem" class="tag is-link">
                     <span class="icon">
-                      <i class="fas fa-question"></i>
+                      <i class="fas fa-search"></i>
                     </span>
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Subsystem}}</span></td>
               </tr>
               <tr>
-                <td>DllCharacteristics
+                <td>
+                  <a data-target="DllCharacteristics" data-reference="image_header" class="salsa-modal-description">DllCharacteristics</a>
                   <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#dll-characteristics" class="tag is-link">
                     <span class="icon">
-                      <i class="fas fa-question"></i>
+                      <i class="fas fa-search"></i>
                     </span>
                   </a>
                 </td>
                 <td><span class="is-family-code">{{DllCharacteristics}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfStackReserve</td>
+                <td><a data-target="SizeOfStackReserve" data-reference="image_header" class="salsa-modal-description">SizeOfStackReserve</a></td>
                 <td><span class="is-family-code">{{SizeOfStackReserve}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfStackCommit</td>
+                <td><a data-target="SizeOfStackCommit" data-reference="image_header" class="salsa-modal-description">SizeOfStackCommit</a></td>
                 <td><span class="is-family-code">{{SizeOfStackCommit}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfHeapReserve</td>
+                <td><a data-target="SizeOfHeapReserve" data-reference="image_header" class="salsa-modal-description">SizeOfHeapReserve</a></td>
                 <td><span class="is-family-code">{{SizeOfHeapReserve}}</span></td>
               </tr>
               <tr>
-                <td>SizeOfHeapCommit</td>
+                <td><a data-target="SizeOfHeapCommit" data-reference="image_header" class="salsa-modal-description">SizeOfHeapCommit</a></td>
                 <td><span class="is-family-code">{{SizeOfHeapCommit}}</span></td>
               </tr>
               <tr>
-                <td>LoaderFlags</td>
+                <td><a data-target="LoaderFlags" data-reference="image_header" class="salsa-modal-description">LoaderFlags</a></td>
                 <td><span class="is-family-code">{{LoaderFlags}}</span></td>
               </tr>
               <tr>
-                <td>NumberOfRvaAndSizes</td>
+                <td><a data-target="NumberOfRvaAndSizes" data-reference="image_header" class="salsa-modal-description">NumberOfRvaAndSizes</a></td>
                 <td><span class="is-family-code">{{NumberOfRvaAndSizes}}</span></td>
               </tr>
             </tbody>
@@ -521,66 +505,54 @@
     <template id="template-pe-report-coff">
       <section id="pe-report-coff" class="section is-hidden">
         <div class="container">
-          <h1 class="title"><span class="has-text-centered">PE/COFF Header</span>
-            <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#coff-file-header-object-and-image" class="tag is-link">
-              <span class="icon">
-                <i class="fas fa-question"></i>
-              </span>
-            </a>
-          </h1>
+          <h1 class="title">PE/COFF Header</h1>
           <table class="table is-striped is-hoverable is-fullwidth">
             <tbody>
               <tr>
-                <td>Signature</td>
+                <td><a data-target="Signature" data-reference="coff_header" class="salsa-modal-description">Signature</a></td>
                 <td><span class="is-family-code">{{Signature}}</span></td>
-                <td>Header signature ('PE' in ASCII)</td>
               </tr>
               <tr>
-                <td><span class="has-text-centered">Machine</span>
+                <td>
+                  <a data-target="Machine" data-reference="coff_header" class="salsa-modal-description">Machine</a>
                   <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#machine-types" class="tag is-link">
                     <span class="icon">
-                      <i class="fas fa-question"></i>
+                      <i class="fas fa-search"></i>
                     </span>
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Machine}}</span></td>
-                <td>The number that identifies the type of target machine: <span class="is-family-code">{{MACHINE_TYPE}}</span></td>
               </tr>
               <tr>
-                <td>NumberOfSections</td>
+                <td><a data-target="NumberOfSections" data-reference="coff_header" class="salsa-modal-description">NumberOfSections</a></td>
                 <td><span class="is-family-code">{{NumberOfSections}}</span></td>
-                <td>The number of sections in the section table, which immediately follows the image header</td>
               </tr>
               <tr>
-                <td>TimeDateStamp</td>
+                <td><a data-target="TimeDateStamp" data-reference="coff_header" class="salsa-modal-description">TimeDateStamp</a></td>
                 <td><span class="is-family-code">{{TimeDateStamp}}</span></td>
-                <td>When the file was created: <span class="is-family-code">{{TIMESTAMP}}</span></td>
               </tr>
               <tr>
-                <td>PointerToSymbolTable</td>
+                <td><a data-target="PointerToSymbolTable" data-reference="coff_header" class="salsa-modal-description">PointerToSymbolTable</a></td>
                 <td><span class="is-family-code">{{PointerToSymbolTable}}</span></td>
-                <td><strong>This value should be zero</strong> for an image because COFF debugging information is deprecated</td>
               </tr>
               <tr>
-                <td>NumberOfSymbols</td>
+                <td><a data-target="NumberOfSymbols" data-reference="coff_header" class="salsa-modal-description">NumberOfSymbols</a></td>
                 <td><span class="is-family-code">{{NumberOfSymbols}}</span></td>
-                <td><strong>This value should be zero</strong> for an image because COFF debugging information is deprecated</td>
               </tr>
               <tr>
-                <td>SizeOfOptionalHeader</td>
+                <td><a data-target="SizeOfOptionalHeader" data-reference="coff_header" class="salsa-modal-description">SizeOfOptionalHeader</a></td>
                 <td><span class="is-family-code">{{SizeOfOptionalHeader}}</span></td>
-                <td>The size of the image header, which is required for executable files</td>
               </tr>
               <tr>
-                <td>Characteristics
+                <td>
+                  <a data-target="Characteristics" data-reference="coff_header" class="salsa-modal-description">Characteristics</a>
                   <a target="_blank" href="https://docs.microsoft.com/en-us/windows/desktop/Debug/pe-format#characteristics" class="tag is-link">
                     <span class="icon">
-                      <i class="fas fa-question"></i>
+                      <i class="fas fa-search"></i>
                     </span>
                   </a>
                 </td>
                 <td><span class="is-family-code">{{Characteristics}}</span></td>
-                <td>The flags that indicate the attributes of the file</td>
               </tr>
             </tbody>
           </table>
